@@ -1,0 +1,5 @@
+
+First done (samplewisenorm off)
+Second done (samplewisenorm off)
+First done (samplewisenorm off), val acc based lr scheduling
+Second done (samplewisenorm off)

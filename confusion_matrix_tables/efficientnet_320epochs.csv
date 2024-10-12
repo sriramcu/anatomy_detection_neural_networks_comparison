@@ -1,0 +1,12 @@
+Class,cecum,esophagitis,polyps,pylorus,ulcerative-colitis,z-line
+cecum,200,0,0,0,2,0
+esophagitis,0,97,0,5,1,30
+polyps,16,0,175,3,12,0
+pylorus,0,4,0,192,0,4
+ulcerative-colitis,8,0,7,1,154,1
+z-line,0,25,0,4,0,158
+Precision = 88.18
+Accuracy = 96.27
+Recall (Sensitivity) = 87.91
+Specificity = 97.77
+F1 score = 87.93

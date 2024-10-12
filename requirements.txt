@@ -1,0 +1,13 @@
+efficientnet
+keras
+matplotlib
+numpy
+opencv_python
+pandas
+Pillow
+pymediainfo
+scikit_image
+scikit_learn
+seaborn
+tensorflow
+gdown
