@@ -6,16 +6,16 @@ way to modify commonly changed values to tune model performance
 import os
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parent.parent  # root directory of the grip assessment project
-DATASET_DIR = os.path.join(ROOT_DIR, "dataset")  # dataset directory for grip assessment
+ROOT_DIR = Path(__file__).resolve().parent.parent  # root directory of the anatomy detection project
+DATASET_DIR = os.path.join(ROOT_DIR, "dataset")
 TRAIN_DIR = os.path.join(DATASET_DIR, "train")
 VAL_DIR = os.path.join(DATASET_DIR, "val")
 TRAIN_PICKLE_DIR = os.path.join(ROOT_DIR, "training_metrics_pickle_files")
 CONF_PICKLE_DIR = os.path.join(ROOT_DIR, "confusion_matrix_pickle_files")
 CONF_CSV_DIR = os.path.join(ROOT_DIR, "confusion_matrix_tables")
 GRAPHS_ROOT_DIR = os.path.join(ROOT_DIR, "graphs")
-CHECKPOINTS_DIR = os.path.join(ROOT_DIR, "checkpoints")  # trained h5 files stored here
-TEXT_FILES_DIR = os.path.join(ROOT_DIR ,"text_files")  
+CHECKPOINTS_DIR = os.path.join(ROOT_DIR, "checkpoints")
+TEXT_FILES_DIR = os.path.join(ROOT_DIR, "text_files")
 # text files to store analysis, parameters used, comments, etc.
 INPUT_VIDEOS_DIR = os.path.join(ROOT_DIR, "videos", "input_videos")
 OUTPUT_VIDEOS_DIR = os.path.join(ROOT_DIR, "videos", "output_videos")
@@ -42,18 +42,17 @@ SAMPLEWISE_NORM = False
 # controls whether Keras ImageDataGenerator object instantiated will use sample wise standard normalisation
 
 
-
-CLASS_LABELS = ["cecum","esophagitis", "polyps", "pylorus","ulcerative-colitis","z-line"]
+CLASS_LABELS = ["cecum", "esophagitis", "polyps", "pylorus", "ulcerative-colitis", "z-line"]
 
 LR_DECAY_FACTOR = 0.1
 # factor by which learning rate decays after gains in validation accuracy slows for a certain no. of epochs
 
 COLOR_DICT = {
-              "red": (0,0,255), 
-              "dark_blue": (255,0,0),
-              "blue": (200,30,0), 
-              "green":(0,255,0), 
-              "yellow":(0,255,255),
-              "orange":(0,140,255)              
-              }
+    "red": (0, 0, 255),
+    "dark_blue": (255, 0, 0),
+    "blue": (200, 30, 0),
+    "green": (0, 255, 0),
+    "yellow": (0, 255, 255),
+    "orange": (0, 140, 255)
+}
 # Dictionary defining color BGR values (str-tuple pairs)

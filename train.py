@@ -3,31 +3,31 @@ Standalone program to train the model using command-line arguments
 to select the network name and some hyperparameters not mentioned in constants module
 """
 import argparse
-import pickle
-import matplotlib.pyplot as plt
-import tensorflow as tf
-import keras
-import os
-import math
-from collections import Counter
-import numpy as np
 import faulthandler
+import os
+import pickle
+from collections import Counter
 
-from utils.constants import *
+import keras
+import tensorflow as tf
+
+from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, LR_DECAY_FACTOR, \
+    MY_DROPOUT, L2_REG, TRAIN_DIR, CHECKPOINTS_DIR, TEXT_FILES_DIR, TRAIN_PICKLE_DIR, VAL_DIR
 from utils.my_datagen import return_my_datagen
-from utils.neural_networks import *
+from utils.neural_networks import create_inception_v4, create_pretrained_inceptionv3, create_pretrained_efficientnetb7, \
+    create_pretrained_nasnet
 
 faulthandler.enable()
 
 
 def train(
-    num_classes,
-    network_name, 
-    num_epochs,
-    train_dir, 
-    val_dir,    
-    custom_preprocessing
-    ):   
+        num_classes,
+        network_name,
+        num_epochs,
+        train_dir,
+        val_dir,
+        custom_preprocessing
+):
     """
     Function to train neural network based on parameters stored in constants.py \
     as well as those supplied via the function parameters. Stores training metrics\
@@ -51,86 +51,68 @@ def train(
     """
 
     checkpoint_dir = CHECKPOINTS_DIR
-    
     checkpoint_filename = f"{network_name}_{num_epochs}epochs.h5"
-
     checkpoint_filepath = os.path.join(checkpoint_dir, checkpoint_filename)
-
     parameters_filepath = os.path.join(TEXT_FILES_DIR, "parameters.txt")
-
     metrics_pickle_filename = f"train_metrics_{num_epochs}epochs_{network_name}.pickle"
-
-    metrics_pickle_filepath = os.path.join(TRAIN_PICKLE_DIR, 
-                                           metrics_pickle_filename)    
+    metrics_pickle_filepath = os.path.join(TRAIN_PICKLE_DIR,
+                                           metrics_pickle_filename)
 
     if not os.path.isdir(train_dir):
         raise FileNotFoundError("Training directory not found!")
-    
     if not os.path.isdir(val_dir):
-        raise FileNotFoundError("Validation directory not found!")    
-    
+        raise FileNotFoundError("Validation directory not found!")
+
     train_datagen = return_my_datagen(custom_preprocessing=custom_preprocessing, mode="training")
-        
     val_datagen = return_my_datagen(custom_preprocessing=custom_preprocessing, mode="prediction")
-
     train_generator = train_datagen.flow_from_directory(
-                                                  train_dir,
-                                                  target_size=(TRAIN_IMAGE_WIDTH,TRAIN_IMAGE_HEIGHT),
-                                                  class_mode="categorical", 
-                                                  batch_size=BATCH_SIZE
-                                                  )    
-    
+        train_dir,
+        target_size=(TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT),
+        class_mode="categorical",
+        batch_size=BATCH_SIZE
+    )
     val_gen = val_datagen.flow_from_directory(
-                                          val_dir,
-                                          target_size=(TRAIN_IMAGE_WIDTH,TRAIN_IMAGE_HEIGHT),
-                                          class_mode="categorical", 
-                                          batch_size=BATCH_SIZE                                          
-                                          )      
-    
-    
-    if network_name == "inceptionv4":
-        model = create_inception_v4(num_classes)        
+        val_dir,
+        target_size=(TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT),
+        class_mode="categorical",
+        batch_size=BATCH_SIZE
+    )
 
+    if network_name == "inceptionv4":
+        model = create_inception_v4(num_classes)
     elif network_name == "inceptionv3":
         model = create_pretrained_inceptionv3(num_classes)
-
-        
     elif network_name == "efficientnet" or network_name == "efficientnetb7":
-        model = create_pretrained_efficientnetb7(num_classes)   
-    
+        model = create_pretrained_efficientnetb7(num_classes)
     elif network_name == "nasnet":
         model = create_pretrained_nasnet(num_classes)
-    
     else:
-        raise ValueError("Please check your network name and try again")    
-    
+        raise ValueError("Please check your network name and try again")
+
     def lr_scheduler(epoch, lr):
-        if epoch > (num_epochs/3):
-            lr = LEARNING_RATE/10
-        
-        # print("Learning Rate = ", lr)
-        return lr    
-    
-    
+        if epoch > (num_epochs / 3):
+            lr = LEARNING_RATE / 10
+        return lr
+
     mc = keras.callbacks.ModelCheckpoint(
-                                        checkpoint_filepath,
-                                        save_weights_only=False,  
-                                        monitor='val_accuracy',                                        
-                                        save_best_only=True
-                                        )
-    
-    early_stopping_callback = tf.keras.callbacks.EarlyStopping(
-    monitor=f"val_loss",
-    min_delta=0,
-    patience=100,
-    verbose=1,
-    mode="auto",
-    baseline=None,
-    restore_best_weights=True,
+        checkpoint_filepath,
+        save_weights_only=False,
+        monitor='val_accuracy',
+        save_best_only=True
     )
-    
-    lr_epoch_based_callback = keras.callbacks.LearningRateScheduler(lr_scheduler, verbose=1)
-    
+
+    early_stopping_callback = tf.keras.callbacks.EarlyStopping(
+        monitor="val_loss",
+        min_delta=0,
+        patience=100,
+        verbose=1,
+        mode="auto",
+        baseline=None,
+        restore_best_weights=True,
+    )
+
+    keras.callbacks.LearningRateScheduler(lr_scheduler, verbose=1)
+
     lr_val_acc_based_callback = tf.keras.callbacks.ReduceLROnPlateau(
         monitor='val_accuracy',
         factor=LR_DECAY_FACTOR,
@@ -138,78 +120,61 @@ def train(
         min_lr=LEARNING_RATE * LR_DECAY_FACTOR,
     )
 
-
     # Earlier option to use RMSProp has been removed, as results were unsatisfactory
 
     optimizer = tf.keras.optimizers.SGD(learning_rate=LEARNING_RATE)
-    
-    model.compile(loss='categorical_crossentropy', 
-                  optimizer= optimizer,
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer=optimizer,
                   metrics=["accuracy"])
 
-    counter = Counter(train_generator.classes)                          
-    max_val = float(max(counter.values()))       
-    class_weights = {class_id : max_val/num_images for class_id, num_images in counter.items()} 
+    counter = Counter(train_generator.classes)
+    max_val = float(max(counter.values()))
+    class_weights = {class_id: max_val / num_images for class_id, num_images in counter.items()}
 
     history = model.fit(train_generator,
-                     epochs=num_epochs,
-                     verbose=True,
-                     validation_data=val_gen,
-                     callbacks=[mc, early_stopping_callback, lr_val_acc_based_callback], 
-                     class_weight=class_weights)    
-    
-    
+                        epochs=num_epochs,
+                        verbose=True,
+                        validation_data=val_gen,
+                        callbacks=[mc, early_stopping_callback, lr_val_acc_based_callback],
+                        class_weight=class_weights)
+
     f = open(parameters_filepath, 'a')
     params = [num_epochs, MY_DROPOUT, LEARNING_RATE, L2_REG, custom_preprocessing, network_name]
     f.write(f"{params}\n")
     f.close()
-    
-    
+
     f = open(metrics_pickle_filepath, "wb")
     # Pickle dumps are FIFO
     pickle.dump(history.history, f)
-    params.append(checkpoint_filename) 
-    pickle.dump(params, f) 
+    params.append(checkpoint_filename)
+    pickle.dump(params, f)
     f.close()
-        
+
 
 def main():
     """
     Calls train() based on command line arguments and values stored in constants.py
     """
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter) 
-    
-    # Default arguments
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-n", "--network", default="inceptionv3", type=str, help="Name of the network")
-        
-    parser.add_argument("-train", 
-                        "--train_dir", 
+    parser.add_argument("-train",
+                        "--train_dir",
                         type=str,
-                        default=TRAIN_DIR, 
+                        default=TRAIN_DIR,
                         help="train dataset directory")
-    
     parser.add_argument("-val", "--val_dir", type=str, default=VAL_DIR, help="val dataset directory")
-        
-    requiredNamed = parser.add_argument_group('required named arguments')
-    # Required arguments
-    requiredNamed.add_argument("-c", "--num_classes", type=int, required=True, help=" ")
-    
-    requiredNamed.add_argument("-p", "--custom_preprocess", type=int, choices=[0,1], required=True, help=" ")
-    
-    requiredNamed.add_argument("-e", "--epochs", type=int, required=True, help=" ")
-    
+    required_arg_group = parser.add_argument_group('required named arguments')
+    required_arg_group.add_argument("-c", "--num_classes", type=int, required=True, help=" ")
+    required_arg_group.add_argument("-p", "--custom_preprocess", type=int, choices=[0, 1], required=True, help=" ")
+    required_arg_group.add_argument("-e", "--epochs", type=int, required=True, help=" ")
     args = vars(parser.parse_args())
 
     num_classes = int(args["num_classes"])
-    
-    custom_preprocessing = int(args["custom_preprocess"])
-    
+    custom_preprocessing = bool(int(args["custom_preprocess"]))
     train_dir = str(args['train_dir'])
-
-    val_dir = str(args['val_dir'])    
-    
+    val_dir = str(args['val_dir'])
     num_epochs = int(args['epochs'])
-    
     network_name = args["network"]
 
     train(num_classes, network_name, num_epochs, train_dir, val_dir, custom_preprocessing)

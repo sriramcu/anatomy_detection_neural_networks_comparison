@@ -1,10 +1,10 @@
 """
 Module to store ImageDataGenerator object to avoid sifting through long progs to modify augmentations used
 """
-from sklearn import preprocessing
-from tensorflow.keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
 from custom_preprocess import custom_preprocess as custom_preprocessing_function
-from constants import *
+from utils.constants import SAMPLEWISE_NORM
 
 
 def return_my_datagen(custom_preprocessing=True, mode="training"):
@@ -17,15 +17,15 @@ def return_my_datagen(custom_preprocessing=True, mode="training"):
 
     Returns:
         ImageDataGenerator: object that describes augmentations to be used on train/val dataset
-    """ 
+    """
     if custom_preprocessing:
         preprocessing_function = custom_preprocessing_function
     else:
         preprocessing_function = None
-          
-    if mode == "training":    
-        datagen=ImageDataGenerator(
-            rescale=1/255,
+
+    if mode == "training":
+        datagen = ImageDataGenerator(
+            rescale=1 / 255,
             rotation_range=40,
             width_shift_range=0.1,
             height_shift_range=0.1,
@@ -36,14 +36,14 @@ def return_my_datagen(custom_preprocessing=True, mode="training"):
             fill_mode='nearest',
             samplewise_std_normalization=SAMPLEWISE_NORM,
             preprocessing_function=preprocessing_function
-            )
-        
-    
+        )
+
+
     else:
         datagen = ImageDataGenerator(
-            rescale=1/255,
+            rescale=1 / 255,
             samplewise_std_normalization=SAMPLEWISE_NORM,
             preprocessing_function=preprocessing_function
-            )
-       
+        )
+
     return datagen
