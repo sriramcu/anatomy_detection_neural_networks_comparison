@@ -1,5 +1,5 @@
 """
-Module to store ImageDataGenerator object to avoid sifting through long progs to modify augmentations used
+Module to fetch ImageDataGenerator object used for augmentations in several locations
 """
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
@@ -7,13 +7,13 @@ from custom_preprocess import custom_preprocess as custom_preprocessing_function
 from utils.constants import SAMPLEWISE_NORM
 
 
-def return_my_datagen(custom_preprocessing=True, mode="training"):
+def get_datagen_obj(custom_preprocessing=True, mode="training"):
     """
     Creates and returns ImageDataGenerator object based on training/prediction mode
 
     Args:
-        custom_preprocessing (bool): Determines whether custom preprocessing technique will be used along with standard augmentations
-        mode (str, optional): Mode for which object will be used- prediction only uses basic augmentations. Defaults to "training".
+        custom_preprocessing (bool): Determines if custom preprocessing will be used along with standard augmentations
+        mode (str, optional): "prediction" only uses basic augmentations. Defaults to "training".
 
     Returns:
         ImageDataGenerator: object that describes augmentations to be used on train/val dataset

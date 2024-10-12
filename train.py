@@ -13,7 +13,7 @@ import tensorflow as tf
 
 from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, LR_DECAY_FACTOR, \
     MY_DROPOUT, L2_REG, TRAIN_DIR, CHECKPOINTS_DIR, TEXT_FILES_DIR, TRAIN_PICKLE_DIR, VAL_DIR
-from utils.my_datagen import return_my_datagen
+from utils.generate_datagen import get_datagen_obj
 from utils.neural_networks import create_inception_v4, create_pretrained_inceptionv3, create_pretrained_efficientnetb7, \
     create_pretrained_nasnet
 
@@ -63,8 +63,8 @@ def train(
     if not os.path.isdir(val_dir):
         raise FileNotFoundError("Validation directory not found!")
 
-    train_datagen = return_my_datagen(custom_preprocessing=custom_preprocessing, mode="training")
-    val_datagen = return_my_datagen(custom_preprocessing=custom_preprocessing, mode="prediction")
+    train_datagen = get_datagen_obj(custom_preprocessing=custom_preprocessing, mode="training")
+    val_datagen = get_datagen_obj(custom_preprocessing=custom_preprocessing, mode="prediction")
     train_generator = train_datagen.flow_from_directory(
         train_dir,
         target_size=(TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT),

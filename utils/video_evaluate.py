@@ -10,7 +10,7 @@ from time import time
 import cv2
 from keras.models import load_model
 
-from my_datagen import return_my_datagen
+from generate_datagen import get_datagen_obj
 from predict_frame import test_frame
 from utils.constants import CHECKPOINTS_DIR, TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT, CLASS_LABELS
 from video_annotator import annotate_frame
@@ -56,7 +56,7 @@ def evaluate_video(input_video_path, output_video_path, metrics_pickle_filepath)
     fourcc = cv2.VideoWriter_fourcc(*"MJPG")
     output_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 
-    datagen = return_my_datagen(custom_preprocessing=custom_preprocessing, mode="prediction")
+    datagen = get_datagen_obj(custom_preprocessing=custom_preprocessing, mode="prediction")
 
     count = 0
 

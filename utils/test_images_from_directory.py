@@ -6,7 +6,7 @@ from pathlib import Path
 
 from keras.models import load_model
 
-from my_datagen import return_my_datagen
+from generate_datagen import get_datagen_obj
 from predict_frame import test_img
 from utils.constants import TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT, CLASS_LABELS, CHECKPOINTS_DIR
 
@@ -30,7 +30,7 @@ def test_images_from_directory(model, test_dir, class_names=[], custom_preproces
         # This will no longer be the default case since it is now taken from constants.py
         class_names = sorted(os.listdir(test_dir_path.resolve().parent))
 
-    val_datagen = return_my_datagen(custom_preprocessing=custom_preprocessing, mode="prediction")
+    val_datagen = get_datagen_obj(custom_preprocessing=custom_preprocessing, mode="prediction")
 
     img_width, img_height = TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT
 
