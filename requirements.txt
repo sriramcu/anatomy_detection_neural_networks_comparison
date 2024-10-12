@@ -6,8 +6,5 @@ opencv_python
 pandas
 Pillow
 pymediainfo
-scikit_image
 scikit_learn
-seaborn
 tensorflow
-gdown
