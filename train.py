@@ -111,7 +111,7 @@ def train(
     )
 
     def lr_scheduler(epoch, lr):
-        if epoch > (num_epochs / 3):
+        if epoch > max((num_epochs / 3), 5):
             lr = LEARNING_RATE / 10
         return lr
 
