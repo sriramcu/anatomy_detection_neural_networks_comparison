@@ -58,7 +58,7 @@ def test_frame(test_image, model, datagen, class_names):
     try:
         test_image = np.expand_dims(test_image, axis=0)
         test_image = datagen.standardize(test_image)
-        predicted_classes = model.predict(test_image, batch_size=10)
+        predicted_classes = model.predict(test_image, batch_size=10, verbose=0)
 
     except ValueError:
         print("Dimension of test image doesn't match input dimension of network")

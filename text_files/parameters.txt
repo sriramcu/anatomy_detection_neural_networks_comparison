@@ -33,3 +33,4 @@
 [353, 0.2, 0.001, 0.005, 1, 'efficientnet']
 [1, 0.2, 0.001, 0.005, 0, 'efficientnet']
 [23, 0.2, 0.001, 0.005, 1, 'efficientnet']
+[5, 0.2, 0.001, 0.005, True, 'efficientnet']

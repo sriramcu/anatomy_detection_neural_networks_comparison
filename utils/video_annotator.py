@@ -38,8 +38,8 @@ def annotate_frame(frame, text, color_str, position="top_left"):
         x = width - pixels_needed_for_text
         y = 40
     elif position == "top_left":
-        x = 10
-        y = 160
+        x = 30
+        y = 140
     else:
         raise ValueError(f"Invalid frame position '{position}'")
 
@@ -101,7 +101,7 @@ def annotate_video(input_video_path, timestamp_ranges, text_list, output_video_p
         # in the timestamps list and the text_list
 
         if lower_timestamp <= current_ts <= upper_timestamp:
-            modified_frame = annotate_frame(frame, text_list[timestamp_range_index], "yellow")
+            modified_frame = annotate_frame(frame, "Expert - " + text_list[timestamp_range_index], "yellow")
             # top left position (default)
             output_writer.write(modified_frame)
             # write modified frame to output video path specified by function argument

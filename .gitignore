@@ -51,3 +51,4 @@ Thumbs.db
 *.pyc
 *.h5
 *.jpg
+*.pickle

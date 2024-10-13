@@ -9,6 +9,7 @@ from pathlib import Path
 from time import time
 
 import cv2
+import efficientnet.keras as efn
 from keras.saving.save import load_model
 
 from utils.constants import CHECKPOINTS_DIR, TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT, CLASS_LABELS
@@ -71,7 +72,7 @@ def evaluate_video(input_video_path, output_video_path, metrics_pickle_filepath)
             print("CUDNN loaded for model prediction, first frame predicted!")
         elif count % 250 == 0:
             print(f"{count} frames of the test video have been predicted so far...")
-        prediction_text = f"{predicted_class}:{rounded_prob}%"
+        prediction_text = f"Model - {predicted_class}:{rounded_prob}%"
         # annotate frame with model prediction
         annotated_frame = annotate_frame(original_frame, prediction_text, "green", position="top_right")
         output_writer.write(annotated_frame)
@@ -88,21 +89,21 @@ def main():
         FileNotFoundError: If input video file or training pickle file is not found
         ValueError: If input or output video file is not in mkv format
     """
-
+    print(efn.__file__)  # so that reformat code does not remove efn import
     parser = argparse.ArgumentParser(argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-i", "--input_video", help="Input video path", required=True)
     parser.add_argument("-o", "--output_video", help="Output video path", required=True)
     parser.add_argument("-t", "--train_pickle", help="Training pickle file path", required=True)
     args = vars(parser.parse_args())
 
-    existing_file_parser_keys = ["i", "t"]
+    existing_file_parser_keys = ["input_video", "train_pickle"]
     for key in existing_file_parser_keys:
         if not os.path.isfile(args[key]):
             raise FileNotFoundError(f"File '{args[key]}' not found!")
 
-    input_video_path = os.path.abspath(args["i"])
-    train_pickle_path = os.path.abspath(args["tp"])
-    output_video_path = os.path.abspath(args["o"])
+    input_video_path = os.path.abspath(args["input_video"])
+    train_pickle_path = os.path.abspath(args["train_pickle"])
+    output_video_path = os.path.abspath(args["output_video"])
 
     if not input_video_path.endswith("mkv") or not output_video_path.endswith("mkv"):
         raise ValueError("Only mkv files supported by the program!")

@@ -169,8 +169,8 @@ def main():
                         type=str, required=True)
     args = vars(parser.parse_args())
 
-    pickle_file_path = os.path.abspath(args["p"])
-    intervals = int(args["i"])
+    pickle_file_path = os.path.abspath(args["train_pickle_file"])
+    intervals = int(args["intervals"])
     k = int(args["k"])
 
     analyse_train_data(pickle_file_path, intervals, k)

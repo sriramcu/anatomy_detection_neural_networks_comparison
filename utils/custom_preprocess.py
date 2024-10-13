@@ -156,17 +156,23 @@ def custom_preprocess(image, clip_limit: float = 1.0, tile_grid_size: tuple = (2
     else:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
         # Now image array will have 3 dimensions in the YUV color space, where array datatype is uint8
-
+    original_image = image.copy()
     image = edge_removal(image, threshold=37, mode="yuv")
+    black_flag = False
+    if image.shape[0] < original_image.shape[0] * 0.3 or image.shape[1] < original_image.shape[1] * 0.3:
+        # To prevent division by zero errors on pure black images
+        black_flag = True
+        image = original_image
     y_component = image[:, :, 0]
     u_component = image[:, :, 1]
     v_component = image[:, :, 2]
 
     # Now, for YUV color space, we only need to process the 'Y' component with MAGVA and the low pass filter
-    y_component = magva(y_component)
+    if not black_flag:
+        y_component = magva(y_component)
+        y_component = apply_low_pass_filter(y_component)
     # we could also use CLAHE instead; MAGVA proved to have better results
 
-    y_component = apply_low_pass_filter(y_component)
     y_component = y_component.astype(u_component.dtype)
     # Since cv2.merge needs all channels to have the same dtype & MAGVA/Low pass could change the dtype during processing
     yuv_image = cv2.merge((y_component, u_component, v_component))

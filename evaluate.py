@@ -8,6 +8,7 @@ import pickle
 import time
 from pathlib import Path
 
+import efficientnet.keras as efn
 import numpy as np
 import pandas as pd
 from keras.models import load_model
@@ -209,7 +210,7 @@ def main():
         help="Path to pickle file generated after model training (REQUIRED)"
     )
     args = vars(ap.parse_args())
-
+    print(efn.__file__)  # so that reformat code does not remove efn import
     test_dir = os.path.abspath(args["test_dir"])
     metrics_pickle_filepath = os.path.abspath(args["train_pickle_file"])
     evaluate_model(test_dir, metrics_pickle_filepath)
