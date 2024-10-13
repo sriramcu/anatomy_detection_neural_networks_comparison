@@ -57,7 +57,7 @@ def train(
         custom_name = "_" + custom_name
     checkpoint_filename = f"{network_name}{custom_name}_{num_epochs}epochs.h5"
     checkpoint_filepath = os.path.join(CHECKPOINTS_DIR, checkpoint_filename)
-    metrics_pickle_filename = f"train_metrics_{num_epochs}epochs_{network_name}.pickle"
+    metrics_pickle_filename = f"train_metrics_{num_epochs}epochs_{network_name}{custom_name}.pickle"
     metrics_pickle_filepath = os.path.join(TRAIN_PICKLE_DIR,
                                            metrics_pickle_filename)
 
