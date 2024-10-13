@@ -2,7 +2,7 @@
 
 An project used for Anatomy Detection Using Deep Learning. Compares the performance of various neural networks 
 and hyperparameters on a six class classification problem. The custom preprocessing (as explained in this 
-README) is loosely based off of the MAPGI [^2] algorithm, [Timothy Cogan et al](./materials/cogan2019.pdf).   
+README) is loosely based off of the MAPGI [^1] algorithm, [link to the research paper](./materials/cogan2019.pdf)   
 
 The methodology and results of this work is described [in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx)
 The ppt shows the effect of using different neural networks, optimizers, augmentation techniques as well as the 
@@ -10,7 +10,7 @@ usage of the custom preprocessing technique.
 
 ## Dataset
 
-The [Hyper Kvasir](https://datasets.simula.no/hyper-kvasir/) dataset is used for this project [^1].
+The [Hyper Kvasir](https://datasets.simula.no/hyper-kvasir/) dataset is used for this project [^2].
 
 ## Brief Overview of the repo structure
 
@@ -73,12 +73,12 @@ The input video is a video showing performed endoscopy, in regions of the body c
 
 ## References
 
-[^1]: Borgli, H., Thambawita, V., Smedsrud, P. H., Hicks, S., Jha, D., Eskeland, S. L., Randel, K. R., 
+[^1]: Cogan T, Cogan M, Tamil L. MAPGI: Accurate identification of anatomical landmarks and diseased tissue in 
+gastrointestinal tract using deep learning. Comput Biol Med. 2019 Aug;111:103351. doi: 10.1016/j.compbiomed.
+2019.103351. Epub 2019 Jul 10. PMID: 31325742.
+
+[^2]: Borgli, H., Thambawita, V., Smedsrud, P. H., Hicks, S., Jha, D., Eskeland, S. L., Randel, K. R., 
 Pogorelov, K., Lux, M., Nguyen, D. T. D., Johansen, D., Griwodz, C., Stensland, H. K., Garcia-Ceja, E., Schmidt,
 P. T., Hammer, H. L., Riegler, M. A., Halvorsen, P., & De Lange, T. (2020). HyperKvasir, a comprehensive 
 multi-class image and video dataset for gastrointestinal endoscopy. Scientific Data, 7(1).
 https://doi.org/10.1038/s41597-020-00622-y
-
-[^2]: Cogan T, Cogan M, Tamil L. MAPGI: Accurate identification of anatomical landmarks and diseased tissue in 
-gastrointestinal tract using deep learning. Comput Biol Med. 2019 Aug;111:103351. doi: 10.1016/j.compbiomed.
-2019.103351. Epub 2019 Jul 10. PMID: 31325742.
