@@ -20,7 +20,7 @@ def edge_removal(image, threshold=50, max_black_ratio=0.7, mode="hsv"):
 
     Args:
         image (np.ndarray): input image in the color space as defined by the "mode" parameter
-        threshold (int, optional): Integer value (0-255), if all 3 pixel channels are < this value, pixel is black. Defaults to 50.
+        threshold (int, optional): int value (0-255), if all 3 pixel channels are < threshold, pixel is black. Defaults to 50.
         max_black_ratio (float, optional): Max ratio of permissible "black" pixels in a row or column. Defaults to 0.7.
         mode (str, optional): color space of the input image. Defaults to "hsv".
     
@@ -65,24 +65,24 @@ def edge_removal(image, threshold=50, max_black_ratio=0.7, mode="hsv"):
     return image
 
 
-def clahe(colorimage, clipLimit: float, tileGridSize: tuple):
+def clahe(input_color_img, clip_limit: float, tile_grid_size: tuple):
     """
     Applies CLAHE histogram equalisation technique to an image
 
     Args:
-        colorimage (np.ndarray): Input image
-        clipLimit (float): Threshold for contrast limiting. 
-        tileGridSize (tuple): Size of grid for histogram equalization
+        input_color_img (np.ndarray): Input image
+        clip_limit (float): Threshold for contrast limiting.
+        tile_grid_size (tuple): Size of grid for histogram equalization
 
     Returns:
         np.ndarray: output image
     """
-    clahe_model = cv2.createCLAHE(clipLimit=clipLimit, tileGridSize=tileGridSize)
-    colorimage_b = clahe_model.apply(colorimage[:, :, 0])
-    colorimage_g = clahe_model.apply(colorimage[:, :, 1])
-    colorimage_r = clahe_model.apply(colorimage[:, :, 2])
-    colorimage = np.stack((colorimage_b, colorimage_g, colorimage_r), axis=2)
-    return colorimage
+    clahe_model = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size)
+    color_image_b = clahe_model.apply(input_color_img[:, :, 0])
+    color_image_g = clahe_model.apply(input_color_img[:, :, 1])
+    color_image_r = clahe_model.apply(input_color_img[:, :, 2])
+    input_color_img = np.stack((color_image_b, color_image_g, color_image_r), axis=2)
+    return input_color_img
 
 
 def magva(image: np.ndarray):
@@ -126,21 +126,21 @@ def apply_low_pass_filter(image):
     return image
 
 
-def custom_preprocess(image, clipLimit: float = 1.0, tileGridSize: tuple = (2, 2), image_format="rgb"):
+def custom_preprocess(image, clip_limit: float = 1.0, tile_grid_size: tuple = (2, 2), image_format="rgb"):
     """
     Custom preprocessing function applied on an image array using a sequence of techniques defined by aforementioned functions
 
     Args:
         image (np.ndarray): input image in the color space as defined by "image_format" argument
-        clipLimit (float, optional): Threshold for contrast limiting. Defaults to 1.0.
-        tileGridSize (tuple, optional): Size of grid for histogram equalization. Defaults to (2,2).
+        clip_limit (float, optional): Threshold for contrast limiting. Defaults to 1.0.
+        tile_grid_size (tuple, optional): Size of grid for histogram equalization. Defaults to (2,2).
         image_format (str, optional): Color space of input image, either "bgr" or "rgb". Defaults to "rgb".
 
     Returns:
         np.ndarray: output image
     """
 
-    sq_flag = False
+    img_was_squeezed = False
     # flag variable to check whether the dimensions of the input image were squeezed 
     # (happens in image evaluation but not training)
 
@@ -149,39 +149,31 @@ def custom_preprocess(image, clipLimit: float = 1.0, tileGridSize: tuple = (2, 2
         # usually happens in the ImageDataGenerator function since keras modules load image in RGB and as float
         if image.ndim == 4:
             image = np.squeeze(image, axis=0)
-            sq_flag = True
+            img_was_squeezed = True
         image = np.asarray(image)
         image = np.uint8(image)  # to make img array compatible with opencv functions likle cvtcolor
-
         image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
-
     else:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
-
         # Now image array will have 3 dimensions in the YUV color space, where array datatype is uint8
-    image = edge_removal(image, threshold=37, mode="yuv")
 
+    image = edge_removal(image, threshold=37, mode="yuv")
     y_component = image[:, :, 0]
     u_component = image[:, :, 1]
     v_component = image[:, :, 2]
 
-    # Now, for YUV color space, we only need to process the 'Y' component with MAGVA and the low pass filter    
-
+    # Now, for YUV color space, we only need to process the 'Y' component with MAGVA and the low pass filter
     y_component = magva(y_component)
     # we could also use CLAHE instead; MAGVA proved to have better results
 
     y_component = apply_low_pass_filter(y_component)
-
     y_component = y_component.astype(u_component.dtype)
-    # Since cv2.merge needs all channels to have the same dtype and MAGVA/Low pass could change the dtype during processing
-    #      
+    # Since cv2.merge needs all channels to have the same dtype & MAGVA/Low pass could change the dtype during processing
     yuv_image = cv2.merge((y_component, u_component, v_component))
-
     image = cv2.cvtColor(yuv_image, cv2.COLOR_YUV2BGR)
-
     image = cv2.resize(image, (TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT), interpolation=cv2.INTER_CUBIC)
 
-    if sq_flag:
+    if img_was_squeezed:
         # if image originally had 4 dims before we squeezed it prior to the 1st YUV conversion, reinstate the fourth dimension
         image = np.expand_dims(image, axis=0)
 
@@ -189,7 +181,7 @@ def custom_preprocess(image, clipLimit: float = 1.0, tileGridSize: tuple = (2, 2
     return image
 
 
-def custom_preprocess_image_file(img_path, clipLimit: float, tileGridSize: tuple):
+def custom_preprocess_image_file(img_path, clip_limit: float, tile_grid_size: tuple):
     """
     Run custom preprocessing on image file by loading it and passing it to the function. \
         Generates output image after custom preprocessing so that programmer can tweak parameters/\
@@ -197,8 +189,8 @@ def custom_preprocess_image_file(img_path, clipLimit: float, tileGridSize: tuple
 
     Args:
         img_path (str): absolute path to input image file
-        clipLimit (float): Threshold for contrast limiting
-        tileGridSize (tuple): Size of grid for histogram equalization
+        clip_limit (float): Threshold for contrast limiting
+        tile_grid_size (tuple): Size of grid for histogram equalization
 
     Raises:
         FileNotFoundError: if input image file is not found
@@ -209,14 +201,11 @@ def custom_preprocess_image_file(img_path, clipLimit: float, tileGridSize: tuple
 
     img_arr = cv2.imread(img_path)  # BGR
     img_arr = cv2.resize(img_arr, (TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT))
+    img_arr = custom_preprocess(img_arr, clip_limit, tile_grid_size, image_format="bgr")
 
     img_path_without_ext = "".join(img_path.split(".")[:-1])
-
-    img_arr = custom_preprocess(img_arr, clipLimit, tileGridSize, image_format="bgr")
-
-    img_path_without_ext += f"_{clipLimit}_{tileGridSize}"
+    img_path_without_ext += f"_{clip_limit}_{tile_grid_size}"
     new_img_path = img_path_without_ext + "." + img_path.split(".")[-1]
-
     cv2.imwrite(new_img_path, img_arr)
 
 

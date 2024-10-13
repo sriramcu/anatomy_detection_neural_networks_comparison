@@ -37,8 +37,6 @@ def get_datagen_obj(custom_preprocessing=True, mode="training"):
             samplewise_std_normalization=SAMPLEWISE_NORM,
             preprocessing_function=preprocessing_function
         )
-
-
     else:
         datagen = ImageDataGenerator(
             rescale=1 / 255,
