@@ -5,6 +5,7 @@ and hyperparameters on a six class classification problem. The custom preprocess
 README) is loosely based off of the MAPGI [^1] algorithm, [link to the research paper](./materials/cogan2019.pdf)   
 
 The methodology and results of this work is described [in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx)
+
 The ppt shows the effect of using different neural networks, optimizers, augmentation techniques as well as the 
 usage of the custom preprocessing technique.
 
