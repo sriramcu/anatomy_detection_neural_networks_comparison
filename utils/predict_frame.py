@@ -15,12 +15,12 @@ import PIL
 import cv2
 
 
-def test_img(filename, img_width, img_height, model, datagen, class_names):
+def test_image_file(filepath, img_width, img_height, model, datagen, class_names):
     """
     Runs model prediction on image file by calling the test_frame() function
 
     Args:
-        filename (str): absolute path to image file
+        filepath (str): absolute path to image file
         img_width (int): width of image
         img_height (int): height of image
         model (keras.Model): loaded keras model
@@ -32,9 +32,9 @@ def test_img(filename, img_width, img_height, model, datagen, class_names):
     """
 
     try:
-        img = load_img(filename, target_size=(img_width, img_height))
+        img = load_img(filepath, target_size=(img_width, img_height))
     except PIL.UnidentifiedImageError:
-        print(f"{filename} couldn't be processed by load_img")
+        print(f"{filepath} couldn't be processed by load_img")
         return False, None
 
     test_image = img_to_array(img)
