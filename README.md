@@ -1,11 +1,22 @@
- An project used for Anatomy Detection Using Deep Learning. Compares the performance of various neural networks and hyperparameters wrt a model that has six classes. The custom preprocessing (as explained in this README) is loosely based off of [Timothy Cogan et al research paper on Anatomy Detection](https://onedrive.live.com/?cid=ABCCEE359FD402B5&id=ABCCEE359FD402B5%21236663&parId=ABCCEE359FD402B5%21234981&o=OneUp).   
+# Anatomy Detection using Deep Learning Techniques 
 
-The methodology and results of this work is described [in this powerpoint presentation](https://1drv.ms/p/s!ArUC1J817syrgb-zcAjlJHwQzDvCaPw?e=wiPFBb).  
+An project used for Anatomy Detection Using Deep Learning. Compares the performance of various neural networks 
+and hyperparameters on a six class classification problem. The custom preprocessing (as explained in this 
+README) is loosely based off of the MAPI algorithm, [Timothy Cogan et al](./materials/cogan2019.pdf).   
 
+The methodology and results of this work is described [in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx)
+The ppt shows the effect of using different neural networks, optimizers, augmentation techniques as well as the 
+usage of the custom preprocessing technique.
+
+## Dataset
+
+The [Hyper Kvasir](https://datasets.simula.no/hyper-kvasir/) dataset is used for this project [^1].
 
 ## Brief Overview of the repo structure
 
-* All programs, functions and modules have been documented with appropriate docstrings. This includes a summarised explanation of each program's purpose at the beginnning of the code. It is advised to go through these before using the code to get an idea of how each program or function interact with the others.
+* All programs, functions and modules have been documented with appropriate docstrings. This includes a 
+  summarised explanation of each program's purpose at the beginnning of the code. It is advised to go through 
+  these before using the code to get an idea of how each program or function interact with the others.
 
 * All standalone executable programs, i.e., the python programs in the root directory of this project, show the command line usage by running `python3 <name_of_the_program> -h`.  
 
@@ -15,7 +26,6 @@ The methodology and results of this work is described [in this powerpoint presen
 
 * `constants.py` in the utils folder stores commonly used and modified hyperparameters and directory names (for dataset, video files, etc.) for convenient, single-location program/system tweaking.
 
-* This README will explain the sequence of executions of programs to get started with one round of training and execution.   
 
 
 ## Usage
@@ -59,3 +69,12 @@ We carry out steps 1 to 4 until we are satisfied with validation accuracy as wel
 
 Note that only mkv files are supported by the system at present since we hardcoded the fourcc code of the codec used in the OpenCV video writer functions.
 The input video is a video showing performed endoscopy, in regions of the body covered by the six classes noted in the ppt. The output video is annotated on the top left corner in yellow color with expert-entered labels (via the command line in the form of user input prompted by the program) as well as on the top right corner in green color with the AI-based prediction returned by the model in the form of the predicted class label and the prediction probability. 
+
+
+## References
+
+[^1]: Borgli, H., Thambawita, V., Smedsrud, P. H., Hicks, S., Jha, D., Eskeland, S. L., Randel, K. R., 
+Pogorelov, K., Lux, M., Nguyen, D. T. D., Johansen, D., Griwodz, C., Stensland, H. K., Garcia-Ceja, E., Schmidt,
+P. T., Hammer, H. L., Riegler, M. A., Halvorsen, P., & De Lange, T. (2020). HyperKvasir, a comprehensive 
+multi-class image and video dataset for gastrointestinal endoscopy. Scientific Data, 7(1).
+https://doi.org/10.1038/s41597-020-00622-y
