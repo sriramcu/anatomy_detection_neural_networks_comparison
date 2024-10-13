@@ -52,3 +52,4 @@ Thumbs.db
 *.h5
 *.jpg
 parameters.txt
+!input.mkv
