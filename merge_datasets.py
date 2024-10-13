@@ -28,6 +28,9 @@ def main():
         for file in os.listdir(os.path.join(TEST_DIR, category)):
             shutil.move(os.path.join(TEST_DIR, category, file), os.path.join(TRAIN_DIR, category))
 
+    shutil.rmtree(VAL_DIR)
+    shutil.rmtree(TEST_DIR)
+
 
 if __name__ == "__main__":
     main()
