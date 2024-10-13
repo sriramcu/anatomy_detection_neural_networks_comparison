@@ -168,7 +168,7 @@ def main():
                         default=TRAIN_DIR,
                         help="train dataset directory")
     parser.add_argument("-v", "--val_dir", type=str, default=VAL_DIR, help="val dataset directory")
-    parser.add_argument("-c", "--custom_name", type=str, default="",
+    parser.add_argument("-u", "-unique_name", type=str, default="",
                         help="Custom string to append to checkpoints filename")
     required_arg_group = parser.add_argument_group('required named arguments')
     required_arg_group.add_argument("-c", "--num_classes", type=int, required=True, help=" ")
@@ -182,7 +182,7 @@ def main():
     val_dir = str(args['val_dir'])
     num_epochs = int(args['epochs'])
     network_name = args["network"]
-    custom_name = args["custom_name"]
+    custom_name = args["unique_name"]
 
     train(num_classes, network_name, num_epochs, train_dir, val_dir, custom_preprocessing, custom_name)
 
