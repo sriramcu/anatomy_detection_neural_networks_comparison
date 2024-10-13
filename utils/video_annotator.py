@@ -100,10 +100,8 @@ def annotate_video(input_video_path, timestamps, text_list, output_video_path):
 
     while success:
         success, frame = vidcap.read()
-
         if not success:
             break
-
         count += 1
         lower_timestamp = timestamps[timestamp_idx][0]
         upper_timestamp = timestamps[timestamp_idx][1]
@@ -113,7 +111,7 @@ def annotate_video(input_video_path, timestamps, text_list, output_video_path):
         # then annotate that frame corresponding to the current timestamp range by using the same index variable 
         # in the timestamps list and the text_list
 
-        if current_ts >= lower_timestamp and current_ts <= upper_timestamp:
+        if lower_timestamp <= current_ts <= upper_timestamp:
             modified_frame = annotate_frame(frame, text_list[timestamp_idx], "yellow")
             # top left position (default)
             output_writer.write(modified_frame)

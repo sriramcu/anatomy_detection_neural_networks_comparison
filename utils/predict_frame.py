@@ -36,9 +36,7 @@ def test_image_file(filepath, img_width, img_height, model, datagen, class_names
     except PIL.UnidentifiedImageError:
         print(f"{filepath} couldn't be processed by load_img")
         return False, None
-
     test_image = img_to_array(img)
-
     return test_frame(test_image, model, datagen, class_names)
 
 
@@ -57,16 +55,10 @@ def test_frame(test_image, model, datagen, class_names):
     """
 
     original_test_image = test_image.copy()
-
     try:
-
         test_image = np.expand_dims(test_image, axis=0)
         test_image = datagen.standardize(test_image)
-        # test_image.shape
-        # test_image = test_image/255
-        # images = np.vstack([test_image])
         predicted_classes = model.predict(test_image, batch_size=10)
-
 
     except ValueError:
         print("Dimension of test image doesn't match input dimension of network")
@@ -82,9 +74,7 @@ def test_frame(test_image, model, datagen, class_names):
 
         except ValueError:
             test_image = np.squeeze(test_image)
-
             test_image = cv2.resize(test_image, (h, w))
-
             test_image = np.expand_dims(test_image, axis=0)
             predicted_classes = model.predict(test_image)
 
