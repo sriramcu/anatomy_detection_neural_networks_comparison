@@ -18,9 +18,6 @@ CHECKPOINTS_DIR = os.path.join(ROOT_DIR, "checkpoints")
 TEXT_FILES_DIR = os.path.join(ROOT_DIR, "text_files")
 PARAMETERS_FILEPATH = os.path.join(TEXT_FILES_DIR, "parameters.txt")
 # text files to store analysis, parameters used, comments, etc.
-INPUT_VIDEOS_DIR = os.path.join(ROOT_DIR, "videos", "input_videos")
-OUTPUT_VIDEOS_DIR = os.path.join(ROOT_DIR, "videos", "output_videos")
-# directory to store output annotated videos
 
 DISABLE_TF_LOGGING = True
 # controls whether to disable tensorflow debug logging like information (I) logs
@@ -29,7 +26,6 @@ TRAIN_IMAGE_WIDTH = 299
 TRAIN_IMAGE_HEIGHT = 299
 # input layer dimensions of neural network. Even if above values do not match neural network actually used 
 # at the time of execution, program has a provision to prompt the user for actual dims in case of mismatch
-
 
 NUM_TRAINABLE_LAYERS = 0
 L2_REG = 0.005
@@ -41,7 +37,6 @@ BATCH_SIZE = 32
 
 SAMPLEWISE_NORM = False
 # controls whether Keras ImageDataGenerator object instantiated will use sample wise standard normalisation
-
 
 CLASS_LABELS = ["cecum", "esophagitis", "polyps", "pylorus", "ulcerative-colitis", "z-line"]
 
