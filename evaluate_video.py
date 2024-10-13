@@ -124,7 +124,7 @@ def main():
     evaluate_video(input_video_path, evaluated_interim_path, train_pickle_path)  # Step 1
     timestamps, text_list = cli_annotation_input(input_video_path)  # Step 2
     annotate_video(evaluated_interim_path, timestamps, text_list, output_video_path)  # Step 3
-    Path(evaluated_interim_path).unlink(missing_ok=True)
+    Path(evaluated_interim_path).unlink(missing_ok=True)  # interim video is annotated with only the model output
 
 
 if __name__ == "__main__":
