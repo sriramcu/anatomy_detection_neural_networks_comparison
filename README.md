@@ -53,8 +53,9 @@ place it in the `dataset` folder after unzipping it.
 Split dataset into train, validation and test datasets using `split_dataset.py` script. Default split is 0.7 - 
 0.15 - 0.15. Use the following command to change that, for example, to a 60-20-20 ratio instead:
 
-`python split_dataset.py -d dataset/train -v 0.2 -t 0.2`
+`python split_dataset.py -d dataset/train -v 0.2 -t 0.2`  
 
+To reverse the above split, use `python merge_datasets.py`
 
 ### 4. Training
 
@@ -69,9 +70,11 @@ Where e is for number of epochs, n is for neural network name, c is for number o
 whether custom preprocessing is enabled for training (if so, it will automatically be enabled for prediction by 
 storing this flag in the pickle file as explained). 
 
-* Note that we do not need to specify dataset directories since these are given in utils/constants.py. 
+* Note that we do not need to specify dataset directories since these are given by default in utils/constants.
+  py. `-t` and `-v` arguments are optional to change these.
 * Try to make sure that in each training session you use a different number of epochs since pickle file name, 
-  checkpoint file name, etc. are based on number of epochs.
+  checkpoint file name, etc. are based on number of epochs, and they could get overwritten if all are the same.
+* To avoid the above case, the `-u` argument can be used to append a custom string to the checkpoint file name.
 * `neural_networks.py` contains all the neural networks used in this project (specified by `-n` argument).
 
 ### 5. Analyze Training Metrics
@@ -82,8 +85,9 @@ storing this flag in the pickle file as explained).
   hyperparameters, network name and the path to saved checkpoints file (i.e. the list saved to 
   text_files/parameters.txt with the checkpoints filepath appended to it).
 
-`python analyse_train_data.py -p training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`
+`python analyse_train_data.py -p training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`  
 
+`-k` and `-i` are optional arguments for kth highest accuracy and interval-wise average accuracy respectively.
 
 ### 6. Evaluation
 
@@ -93,6 +97,7 @@ This will run model predictions on the validation dataset directory and generate
 trained model in the form of a csv file complete with confusion matrix-related metrics (like accuracy, F1 score,
 precision, recall, etc.) under the "confusion_matrix_tables" directory.  
 
+`-d` is an optional argument to specify a different test dataset directory.
 
 ### 7. Dual Annotation
 We carry out steps 1 to 4 until we are satisfied with validation accuracy as well as the training metrics. Then,
