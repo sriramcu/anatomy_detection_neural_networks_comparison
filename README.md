@@ -1,7 +1,7 @@
 # Anatomy Detection using Deep Learning Techniques 
 
-An project used for Anatomy Detection Using Deep Learning. Compares the performance of various neural networks 
-and hyperparameters on a six class classification problem. The custom preprocessing (as explained in this 
+A project used for Anatomy Detection in Endoscopy Using Deep Learning. Compares the performance of various neural 
+networks and hyperparameters on a six class classification problem. The custom preprocessing (as explained in this 
 README) is loosely based off of the MAPGI [^1] algorithm, [link to the research paper](./materials/cogan2019.pdf)   
 
 The methodology and results of this work is described [in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx)
@@ -15,62 +15,111 @@ The [Hyper Kvasir](https://datasets.simula.no/hyper-kvasir/) dataset is used for
 
 ## Brief Overview of the repo structure
 
-* All programs, functions and modules have been documented with appropriate docstrings. This includes a 
-  summarised explanation of each program's purpose at the beginnning of the code. It is advised to go through 
-  these before using the code to get an idea of how each program or function interact with the others.
-
-* All standalone executable programs, i.e., the python programs in the root directory of this project, show the command line usage by running `python3 <name_of_the_program> -h`.  
-
-* The text files are for reference, and to remember details of past sessions like hyperparameters used, terminal outputs, etc.
-
-* The shell scripts are meant to be used if we want to do some tasks overnight sequentially without any user intervention.
-
-* `constants.py` in the utils folder stores commonly used and modified hyperparameters and directory names (for dataset, video files, etc.) for convenient, single-location program/system tweaking.
-
-
+* The parameter text file is for reference, and to remember details of past sessions like hyperparameters and 
+  optimizer used.
+* `constants.py` in the utils folder stores commonly used and modified hyperparameters and directory names (for 
+  dataset, video files, etc.) for convenient, single-location program/system tweaking.
+* Pickle files in the `training_metrics_pickle_files` folder store training metrics like history, number of 
+  epochs, network name, and the path to the saved checkpoints file. The pickle file name is based on the number 
+  of epochs, hyperparameters, network name and the path to the saved checkpoints file.
+* `analyse_train_data.py` is used to visualise and analyse training metrics saved into the above pickle file, 
+  to generate graphs for epoch wise training/validation loss and accuracy, and interval-wise average validation 
+  accuracy. The graphs are saved into `graphs` folder, under a subfolder whose name is based on the pickle file.
+* We have chosen to use this pickle file system to save us the trouble of mentioning where the checkpoint file 
+  is located, whether preprocessing is enabled, which would affect the image operations on the test data. It is 
+  also useful in case you want to write a separate program to analyse model training metrics to see how to 
+  optimise training further.
+* `confusion_matrix_tables` is a folder which stores the CSV files of confusion matrix generated when we run 
+  the evaluate program on the test data.
 
 ## Usage
 
-Follow these steps in order:
+Follow these steps in order after cloning the repo:
 
 ### 1. Setup
 `pip install -r requirements.txt`  
 
 ### 2. Download Dataset
-The relevant six classes have already been extracted from the hyper kvasir dataset and segregated into training and validation dataset (in an 80-20 ratio) and uploaded to Google Drive. It can be downloaded by running the following command in the root directory of this Anatomy Detection Project:-
-`./shell_scripts/download_dataset.sh`
+The relevant six classes have already been extracted from the Hyper Kvasir dataset and uploaded to Google Drive.
+Download the dataset and place it in the `dataset` folder after unzipping it.
 
-### 3. Training
-We can modify image augmentation techniques in utils/my_datagen.py. Or we could change L2 parameter, initial learning rate or dropout rate of final dense (fully connected) layer in utils/constants.py. Then, choose your neural network. We suggest using EfficientNetB7, since it was the best model as discussed in the ppt linked to at the beginning of this README.  
+### 3. Split Dataset
 
-`python3 train.py -e <num_epochs> -n efficientnet -c 6 -p 1`  
+Split dataset into train, validation and test datasets using `split_dataset.py` script. Default split is 0.7 - 
+0.15 - 0.15. Use the following command to change that, for example, to a 60-20-20 ratio instead:
 
-Where e is for number of epochs, n is for neural network name, c is for number of classes and p is to select whether custom preprocessing is enabled for training (if so, it will automatically be enabled for prediction by storing this flag in the pickle file as explained below). Note that we do not need to specify dataset directories since these are given in utils/constants.py. Try to make sure that in each training session you use a different number of epochs since pickle file name, checkpoint file name, etc. are based on number of epochs.
-After training, a pickle file will be created in `training_metrics_pickle_files/` which contains data from 2 pickle.dump() statements- the first dumps the training "history" which is a dictionary where the keys are 'acc', 'loss', 'val_acc', 'val_loss'. The second dumps a list containing the number of epochs, hyperparameters, network name and the path to saved checkpoints file (i.e. the list saved to text_files/parameters.txt with the checkpoints filepath appended to it).   
-
-To observe graphs for epoch wise training/validation loss and accuracy, run the following command:
-`python3 utils/visualise_train_data.py <train_metrics_pickle_file>`  
-
-To analyse interval-wise average validation accuracy as well as peak validation accuracy (ranked kth from the best validation accuracy over the entire training session), run the following command:
-`python3 utils/analyse_train_data.py -pfile <train_metrics_pickle_file>`
+`python split_dataset.py -d dataset/train -v 0.2 -t 0.2`
 
 
+### 4. Training
 
-### 4. Evaluation
-Note the file path of the pickle file generated in step 3. Then, run the following command:
-`python3 evaluate.py -pfile <train_pickle_file_path>`
+We can modify image augmentation techniques in utils/my_datagen.py. Or we could change L2 parameter, initial 
+learning rate or dropout rate of final dense (fully connected) layer in utils/constants.py. Then, choose your 
+neural network via the command line. We suggest using EfficientNetB7, since it was the best model as discussed in 
+the ppt linked to at the beginning of this README.  
 
-This will run model predictions on the validation dataset directory and generate a confusion matrix for the trained model in the form of a pickle file, stored under the "confusion_matrix_pickle_files" directory as well as a csv file (that can be viewed as a table in any spreadsheet software like Excel, Google Sheets or LibreOffice Calc) complete with confusion matrix-related metrics (like accuracy, F1 score, precision, recall, etc.) under the "confusion_matrix_tables" directory.  
+`python train.py -e <num_epochs> -n efficientnet -c 6 -p 1`  
+
+Where e is for number of epochs, n is for neural network name, c is for number of classes and p is to select 
+whether custom preprocessing is enabled for training (if so, it will automatically be enabled for prediction by 
+storing this flag in the pickle file as explained). 
+
+* Note that we do not need to specify dataset directories since these are given in utils/constants.py. 
+* Try to make sure that in each training session you use a different number of epochs since pickle file name, 
+  checkpoint file name, etc. are based on number of epochs.
+
+### 5. Analyze Training Metrics
+
+* After training, a pickle file will be created in `training_metrics_pickle_files/` which contains data from 2 
+  pickle.dump() statements - the first dumps the training "history" which is a dictionary where the keys are 
+  'acc', 'loss', 'val_acc', 'val_loss'. The second dumps a list containing the number of epochs, 
+  hyperparameters, network name and the path to saved checkpoints file (i.e. the list saved to 
+  text_files/parameters.txt with the checkpoints filepath appended to it).
+
+`python analyse_train_data.py -p training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`
 
 
-### 5. Dual Annotation
-We carry out steps 1 to 4 until we are satisfied with validation accuracy as well as the metrics discussed in step 4. Then, we note the pickle file path for the best performing trained model and use it in the dual annotation program (performing expert-based and AI-based predictions), for which the command is shown below:
+### 6. Evaluation
 
-`python3 main.py -i videos/input_videos/<input_video_name> -o videos/output_videos/<output_video_name> -tp <train_pickle_path_for_best_performing_model>` 
+`python evaluate.py -p training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`
 
-Note that only mkv files are supported by the system at present since we hardcoded the fourcc code of the codec used in the OpenCV video writer functions.
-The input video is a video showing performed endoscopy, in regions of the body covered by the six classes noted in the ppt. The output video is annotated on the top left corner in yellow color with expert-entered labels (via the command line in the form of user input prompted by the program) as well as on the top right corner in green color with the AI-based prediction returned by the model in the form of the predicted class label and the prediction probability. 
+This will run model predictions on the validation dataset directory and generate a confusion matrix for the 
+trained model in the form of a csv file complete with confusion matrix-related metrics (like accuracy, F1 score,
+precision, recall, etc.) under the "confusion_matrix_tables" directory.  
 
+
+### 7. Dual Annotation
+We carry out steps 1 to 4 until we are satisfied with validation accuracy as well as the training metrics. Then,
+use the best model in the dual annotation program (performing expert-based and AI-based predictions), for which 
+the command is shown below:
+
+`python evaluate_video.py -i videos/input_videos/input.mkv -o videos/output_videos/output.mkv -t 
+training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`
+
+* The program, after performing frame wise model predictions on the mkv video, then prompts the user for "expert 
+  annotations", which are entered as inputs via the command line, to simulate actual medical experts laying out 
+  the ground truth for the video.
+* The input video is present in the repository in the path mentioned in the above command. We created this 
+  video by stitching together labelled videos in the Hyper Kvasir dataset. It is a video showing performed 
+  endoscopy, in regions of the body covered by the six classes noted in the ppt. 
+* If the above video is being used, the expert annotations are: 0-60 seconds are z-line, 60-92 seconds are 
+  cecum and 92 seconds till the end of the video are polyp.
+* Note that only mkv files are supported by the system at present since we hardcoded the fourcc code of the codec 
+used in the OpenCV video writer functions. 
+* The output video is annotated in the top left corner in yellow color with expert-entered labels (via the 
+  command line in the form of user input prompted by the program) as well as in the top right corner in green 
+  color with the AI-based prediction returned by the model in the form of the predicted class label and the prediction probability. 
+
+## Note
+
+Due to large file restrictions, the checkpoints have not been uploaded to the repository and they remain in our 
+local system. Please reach out to me if you'd like to use a specific model checkpoints (h5) file for 
+predictions, will be happy to share it. You can also contact me for any other kind of clarification.
+
+## Contributions
+
+Contributions are welcome! If you have any ideas, bug fixes, GUI enhancements or anything else, please feel 
+free to open an issue or submit a pull request.
 
 ## References
 
