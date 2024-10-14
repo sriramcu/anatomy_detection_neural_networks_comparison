@@ -12,9 +12,8 @@ from collections import Counter
 import keras
 import tensorflow as tf
 
-
 from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, MY_DROPOUT, L2_REG, \
-    TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH, OPTIMIZER, VERBOSE
+    TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH, OPTIMIZER
 from utils.generate_datagen import get_datagen_obj
 from utils.neural_networks import create_inception_v4, create_pretrained_inceptionv3, create_pretrained_efficientnetb7, \
     create_pretrained_nasnet
@@ -168,7 +167,7 @@ def train(
         class PrintDecayedLrCallback(tf.keras.callbacks.Callback):
             def on_epoch_begin(self, epoch, logs=None):
                 current_decayed_lr = self.model.optimizer._decayed_lr(tf.float32).numpy()
-                print(f"Current lr: {round(current_decayed_lr,6)}")
+                print(f"Current lr: {round(current_decayed_lr, 6)}")
 
         callbacks_list.append(PrintDecayedLrCallback())
 
