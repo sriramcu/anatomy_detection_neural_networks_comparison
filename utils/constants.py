@@ -6,6 +6,8 @@ way to modify commonly changed values to tune model performance
 import os
 from pathlib import Path
 
+from joblib.externals.loky.backend.resource_tracker import VERBOSE
+
 ROOT_DIR = Path(__file__).resolve().parent.parent  # root directory of the anatomy detection project
 DATASET_DIR = os.path.join(ROOT_DIR, "dataset")
 TRAIN_DIR = os.path.join(DATASET_DIR, "train")
@@ -28,9 +30,10 @@ TRAIN_IMAGE_HEIGHT = 299
 # at the time of execution, program has a provision to prompt the user for actual dims in case of mismatch
 
 NUM_TRAINABLE_LAYERS = 0
-L2_REG = 0.005
-MY_DROPOUT = 0.2
-LEARNING_RATE = 0.001
+L2_REG = 0.0004  # 0.005 for SGD
+MY_DROPOUT = 0.3
+LEARNING_RATE = 0.01 # 0.001 for SGD
+OPTIMIZER = "RMSprop"
 # for pretrained networks, number of layers whose parameters/weights can be modified during training process
 
 BATCH_SIZE = 32

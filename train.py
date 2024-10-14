@@ -4,6 +4,7 @@ to select the network name and some hyperparameters not mentioned in constants m
 """
 import argparse
 import faulthandler
+import math
 import os
 import pickle
 from collections import Counter
@@ -11,8 +12,9 @@ from collections import Counter
 import keras
 import tensorflow as tf
 
-from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, LR_DECAY_FACTOR, \
-    MY_DROPOUT, L2_REG, TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH
+
+from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, MY_DROPOUT, L2_REG, \
+    TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH, OPTIMIZER, VERBOSE
 from utils.generate_datagen import get_datagen_obj
 from utils.neural_networks import create_inception_v4, create_pretrained_inceptionv3, create_pretrained_efficientnetb7, \
     create_pretrained_nasnet
@@ -81,6 +83,10 @@ def train(
         batch_size=BATCH_SIZE
     )
 
+    num_train_samples = sum([len(files) for r, d, files in os.walk(train_dir)])
+    train_steps_per_epoch = int(math.ceil(num_train_samples / BATCH_SIZE))
+    print(f"Calculated training steps per epoch: {train_steps_per_epoch}")
+
     if network_name == "inceptionv4":
         model = create_inception_v4(num_classes)
     elif network_name == "inceptionv3":
@@ -103,29 +109,71 @@ def train(
     early_stopping_callback = tf.keras.callbacks.EarlyStopping(
         monitor="val_loss",
         min_delta=0,
-        patience=100,
+        patience=50,
         verbose=1,
         mode="auto",
         baseline=None,
         restore_best_weights=True,
     )
 
-    def lr_scheduler(epoch, lr):
-        if epoch > max((num_epochs / 3), 5):
-            lr = LEARNING_RATE / 10
-        return lr
+    callbacks_list = [model_checkpoint_callback, early_stopping_callback]
 
-    keras.callbacks.LearningRateScheduler(lr_scheduler, verbose=1)
-    lr_val_acc_based_callback = tf.keras.callbacks.ReduceLROnPlateau(
-        monitor='val_accuracy',
-        factor=LR_DECAY_FACTOR,
-        patience=20,
-        min_lr=LEARNING_RATE * LR_DECAY_FACTOR,
-    )
+    if OPTIMIZER == "SGD":
+        print(f"LR = {LEARNING_RATE}")
+        optimizer = tf.keras.optimizers.SGD(learning_rate=LEARNING_RATE)
 
-    # Define optimizer - The results using RMSProp were unsatisfactory
+    elif OPTIMIZER == 'RMSprop':
+        decay = 0.9
+        momentum = 0.9
+        epsilon = 1.0
+        decay_factor = 0.94
+        epochs_per_decay = 2
+        end_rate = 0.0001
+        initial_learning_rate = LEARNING_RATE
 
-    optimizer = tf.keras.optimizers.SGD(learning_rate=LEARNING_RATE)
+        class CustomExponentialDecay(tf.keras.optimizers.schedules.LearningRateSchedule):
+            def __init__(self, initial_learning_rate, decay_factor, decay_steps, end_rate):
+                self.initial_learning_rate = initial_learning_rate
+                self.decay_factor = decay_factor
+                self.decay_steps = decay_steps
+                self.end_rate = end_rate
+
+            def __call__(self, step):
+                lr = self.initial_learning_rate * self.decay_factor ** (step // self.decay_steps)
+                lr = tf.maximum(lr, self.end_rate)
+                return lr
+
+            def get_config(self):
+                return {
+                    "initial_learning_rate": self.initial_learning_rate,
+                    "decay_factor": self.decay_factor,
+                    "decay_steps": self.decay_steps,
+                    "end_rate": self.end_rate
+                }
+
+        lr_schedule = CustomExponentialDecay(
+            initial_learning_rate=initial_learning_rate,
+            decay_factor=decay_factor,
+            decay_steps=epochs_per_decay * train_steps_per_epoch,
+            end_rate=end_rate
+        )
+
+        optimizer = tf.keras.optimizers.RMSprop(
+            learning_rate=lr_schedule,
+            rho=decay,
+            momentum=momentum,
+            epsilon=epsilon,
+        )
+
+        class PrintDecayedLrCallback(tf.keras.callbacks.Callback):
+            def on_epoch_begin(self, epoch, logs=None):
+                current_decayed_lr = self.model.optimizer._decayed_lr(tf.float32).numpy()
+                print(f"Current lr: {round(current_decayed_lr,6)}")
+
+        callbacks_list.append(PrintDecayedLrCallback())
+
+    else:
+        raise ValueError("Please check your optimizer and try again")
 
     model.compile(loss='categorical_crossentropy',
                   optimizer=optimizer,
@@ -140,13 +188,13 @@ def train(
                         epochs=num_epochs,
                         verbose=True,
                         validation_data=val_gen,
-                        callbacks=[model_checkpoint_callback, early_stopping_callback, lr_val_acc_based_callback],
+                        callbacks=callbacks_list,
                         class_weight=class_weights)
 
     # Save stuff into txt and pickle files as explained in the docstring
     f = open(PARAMETERS_FILEPATH, 'a')
     params = [num_epochs, MY_DROPOUT, LEARNING_RATE, L2_REG, custom_preprocessing, network_name]
-    f.write(f"{params}\n")
+    f.write(f"{params + [OPTIMIZER]}\n")
     f.close()
 
     f = open(metrics_pickle_filepath, "wb")
