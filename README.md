@@ -1,10 +1,12 @@
-# Anatomy Detection using Deep Learning Techniques 
+# Anatomy Detection in Endoscopy using Deep Learning Techniques 
 
-A project used for Anatomy Detection in Endoscopy Using Deep Learning. Compares the performance of various neural 
-networks and hyperparameters on a six class classification problem. The custom preprocessing (as explained in this 
-README) is loosely based off of the MAPGI [^1] algorithm, [link to the research paper](./materials/cogan2019.pdf)   
+A project used for a comparative study of deep learning algorithms used for anatomy detection in endoscopy. 
+Compares the performance of various neural networks and hyperparameters on a six class classification problem. 
+The custom preprocessing (as explained in this README) is loosely based off of the MAPGI [^1] algorithm, [link 
+to the research paper](./materials/cogan2019.pdf).
 
-The methodology and results of this work is described [in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx)
+The methodology and results of this work is described 
+[in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx).
 
 The ppt shows the effect of using different neural networks, optimizers, augmentation techniques as well as the 
 usage of the custom preprocessing technique.
@@ -15,21 +17,23 @@ The [Hyper Kvasir](https://datasets.simula.no/hyper-kvasir/) dataset is used for
 
 ## Brief Overview of the repo structure
 
-* The parameter text file is for reference, and to remember details of past sessions like hyperparameters and 
-  optimizer used.
+* The parameters text file under text_files is to log details of past sessions like hyperparameters and optimizer used.
 * `constants.py` in the utils folder stores commonly used and modified hyperparameters and directory names (for 
   dataset, video files, etc.) for convenient, single-location program/system tweaking.
-* Pickle files in the `training_metrics_pickle_files` folder store training metrics like history, number of 
-  epochs, network name, and the path to the saved checkpoints file. The pickle file name is based on the number 
-  of epochs, hyperparameters, network name and the path to the saved checkpoints file.
+* Pickle files in the `training_metrics_pickle_files` folder store training metrics like history (acc, loss for 
+  training and validation), hyperparameters, chosen neural network name and the path to saved checkpoints file
+  number of epochs, network name, and the path to the saved checkpoints file. The pickle file name is based on the number 
+  of epochs and network name for easy reference.
 * `analyse_train_data.py` is used to visualise and analyse training metrics saved into the above pickle file, 
   to generate graphs for epoch wise training/validation loss and accuracy, and interval-wise average validation 
-  accuracy. The graphs are saved into `graphs` folder, under a subfolder whose name is based on the pickle file.
-* We have chosen to use this pickle file system to save us the trouble of mentioning where the checkpoint file 
-  is located, whether preprocessing is enabled, which would affect the image operations on the test data. It is 
-  also useful in case you want to write a separate program to analyse model training metrics to see how to 
+  accuracy. The graphs are saved into the `graphs` folder, under a subfolder whose name is based on the pickle 
+  file's name.
+* We have chosen to use this pickle file system to save us the trouble of mentioning what network was used, where 
+  the checkpoint file is located, whether preprocessing is enabled, which would affect the image operations on 
+  the test data. It is also useful in case you want to write a separate program to analyse model training 
+  metrics to see how to 
   optimise training further.
-* `confusion_matrix_tables` is a folder which stores the CSV files of confusion matrix generated when we run 
+* `confusion_matrix_tables` is a folder which stores the CSV files of the confusion matrix generated when we run 
   the evaluate program on the test data.
 
 ## Usage
@@ -41,7 +45,8 @@ Follow these steps in order after cloning the repo:
 
 ### 2. Download Dataset
 The relevant six classes have already been extracted from the Hyper Kvasir dataset and uploaded to Google Drive.
-Download the dataset and place it in the `dataset` folder after unzipping it.
+[Download the dataset](https://drive.google.com/file/d/1hsYUNDw5vtTjsZ-raetkrgbncnjLVSfv/view?usp=sharing) and 
+place it in the `dataset` folder after unzipping it.
 
 ### 3. Split Dataset
 
@@ -67,6 +72,7 @@ storing this flag in the pickle file as explained).
 * Note that we do not need to specify dataset directories since these are given in utils/constants.py. 
 * Try to make sure that in each training session you use a different number of epochs since pickle file name, 
   checkpoint file name, etc. are based on number of epochs.
+* `neural_networks.py` contains all the neural networks used in this project (specified by `-n` argument).
 
 ### 5. Analyze Training Metrics
 
