@@ -124,10 +124,9 @@ def train(
     elif OPTIMIZER == 'RMSprop':
         decay = 0.9
         momentum = 0.9
-        epsilon = 1.0
         decay_factor = 0.94
         epochs_per_decay = 2
-        end_rate = 0.0001
+        end_rate = LEARNING_RATE/100
         initial_learning_rate = LEARNING_RATE
 
         class CustomExponentialDecay(tf.keras.optimizers.schedules.LearningRateSchedule):
@@ -161,7 +160,6 @@ def train(
             learning_rate=lr_schedule,
             rho=decay,
             momentum=momentum,
-            epsilon=epsilon,
         )
 
         class PrintDecayedLrCallback(tf.keras.callbacks.Callback):
