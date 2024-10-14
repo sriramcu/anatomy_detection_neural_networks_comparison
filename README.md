@@ -93,7 +93,7 @@ storing this flag in the pickle file as explained).
 
 `python evaluate.py -p training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`
 
-This will run model predictions on the validation dataset directory and generate a confusion matrix for the 
+This will run model predictions on the test dataset directory and generate a confusion matrix for the 
 trained model in the form of a csv file complete with confusion matrix-related metrics (like accuracy, F1 score,
 precision, recall, etc.) under the "confusion_matrix_tables" directory.  
 
