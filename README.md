@@ -2,8 +2,9 @@
 
 A project used for a comparative study of deep learning algorithms used for anatomy detection in endoscopy. 
 Compares the performance of various neural networks and hyperparameters on an eight class classification problem. 
-The custom preprocessing (as explained in this README) is loosely based off of the MAPGI [^1] algorithm, [link 
-to the research paper](./materials/cogan2019.pdf).
+The custom preprocessing (as explained in this README) is loosely based off of the MAPGI [^1] algorithm 
+described in [this research paper](./materials/cogan2019.pdf), which also was a starting point for this project 
+for us to improve upon by tweaking the hyperparameters and neural networks to find an optimal model.
 
 The methodology and results of this work is described 
 [in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx).
@@ -46,7 +47,7 @@ Follow these steps in order after cloning the repo:
 
 ### 2. Download Dataset
 The relevant eight classes have already been extracted from the Hyper Kvasir dataset and uploaded to Google Drive.
-[Download the dataset](https://drive.google.com/file/d/1hsYUNDw5vtTjsZ-raetkrgbncnjLVSfv/view?usp=sharing) and 
+[Download the dataset](https://drive.google.com/file/d/1yFgW7AAySYK7Dkj2VWO4fiyIYpVA-ym2/view?usp=sharing) and 
 place it in the `dataset` folder after unzipping it. After doing this, the directory structure would look like:
 
 ```
