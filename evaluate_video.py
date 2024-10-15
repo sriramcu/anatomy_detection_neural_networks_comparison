@@ -12,6 +12,7 @@ import cv2
 import efficientnet.keras as efn
 from keras.saving.save import load_model
 
+from custom_exponential_decay_class import CustomExponentialDecay
 from utils.constants import CHECKPOINTS_DIR, TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT, CLASS_LABELS
 from utils.generate_datagen import get_datagen_obj
 from utils.predict_frame import test_frame
@@ -41,7 +42,10 @@ def evaluate_video(input_video_path, output_video_path, metrics_pickle_filepath)
     if not os.path.isfile(checkpoints_filepath):
         raise FileNotFoundError(f"Checkpoints file '{checkpoints_filepath}' not found!")
 
-    model = load_model(checkpoints_filepath)
+    try:
+        model = load_model(checkpoints_filepath)
+    except ValueError:
+        model = load_model(checkpoints_filepath, custom_objects={'CustomExponentialDecay': CustomExponentialDecay})
 
     vidcap = cv2.VideoCapture(input_video_path)
     fps = vidcap.get(cv2.CAP_PROP_FPS)
