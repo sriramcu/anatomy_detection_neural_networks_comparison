@@ -12,6 +12,7 @@ from collections import Counter
 import keras
 import tensorflow as tf
 
+from custom_exponential_decay_class import CustomExponentialDecay
 from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, MY_DROPOUT, L2_REG, \
     TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH, OPTIMIZER
 from utils.generate_datagen import get_datagen_obj
@@ -135,26 +136,6 @@ def train(
         epochs_per_decay = 2
         end_rate = LEARNING_RATE/100
         initial_learning_rate = LEARNING_RATE
-
-        class CustomExponentialDecay(tf.keras.optimizers.schedules.LearningRateSchedule):
-            def __init__(self, initial_learning_rate, decay_factor, decay_steps, end_rate):
-                self.initial_learning_rate = initial_learning_rate
-                self.decay_factor = decay_factor
-                self.decay_steps = decay_steps
-                self.end_rate = end_rate
-
-            def __call__(self, step):
-                lr = self.initial_learning_rate * self.decay_factor ** (step // self.decay_steps)
-                lr = tf.maximum(lr, self.end_rate)
-                return lr
-
-            def get_config(self):
-                return {
-                    "initial_learning_rate": self.initial_learning_rate,
-                    "decay_factor": self.decay_factor,
-                    "decay_steps": self.decay_steps,
-                    "end_rate": self.end_rate
-                }
 
         lr_schedule = CustomExponentialDecay(
             initial_learning_rate=initial_learning_rate,

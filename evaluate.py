@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from keras.models import load_model
 
+from custom_exponential_decay_class import CustomExponentialDecay
 from utils.constants import CHECKPOINTS_DIR, CLASS_LABELS, CONF_CSV_DIR, TRAIN_IMAGE_WIDTH, \
     TRAIN_IMAGE_HEIGHT, TEST_DIR
 from utils.generate_datagen import get_datagen_obj
@@ -157,8 +158,10 @@ def evaluate_model(test_dir, metrics_pickle_filepath):
 
     checkpoints_basename = checkpoints_filename.split(".")[0]
     conf_matrix_csv_fpath = os.path.join(CONF_CSV_DIR, f"{checkpoints_basename}.csv")
-
-    model = load_model(checkpoints_filepath)
+    try:
+        model = load_model(checkpoints_filepath)
+    except ValueError:
+        model = load_model(checkpoints_filepath, custom_objects={'CustomExponentialDecay': CustomExponentialDecay})
     results = {}  # key is actual class label, value is dict of predicted class labels
     for actual_class_label in CLASS_LABELS:
         test_class_dir = os.path.join(test_dir, actual_class_label)
