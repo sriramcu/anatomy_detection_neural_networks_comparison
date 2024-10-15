@@ -1,7 +1,7 @@
 # Anatomy Detection in Endoscopy using Deep Learning Techniques 
 
 A project used for a comparative study of deep learning algorithms used for anatomy detection in endoscopy. 
-Compares the performance of various neural networks and hyperparameters on a six class classification problem. 
+Compares the performance of various neural networks and hyperparameters on an eight class classification problem. 
 The custom preprocessing (as explained in this README) is loosely based off of the MAPGI [^1] algorithm, [link 
 to the research paper](./materials/cogan2019.pdf).
 
@@ -9,7 +9,8 @@ The methodology and results of this work is described
 [in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx).
 
 The ppt shows the effect of using different neural networks, optimizers, augmentation techniques as well as the 
-usage of the custom preprocessing technique.
+usage of the custom preprocessing technique. The ppt also describes cases where dyed lifted polyps and dyed 
+resection margins are not included in the classifier.
 
 ## Dataset
 
@@ -44,9 +45,25 @@ Follow these steps in order after cloning the repo:
 `pip install -r requirements.txt`  
 
 ### 2. Download Dataset
-The relevant six classes have already been extracted from the Hyper Kvasir dataset and uploaded to Google Drive.
+The relevant eight classes have already been extracted from the Hyper Kvasir dataset and uploaded to Google Drive.
 [Download the dataset](https://drive.google.com/file/d/1hsYUNDw5vtTjsZ-raetkrgbncnjLVSfv/view?usp=sharing) and 
-place it in the `dataset` folder after unzipping it.
+place it in the `dataset` folder after unzipping it. After doing this, the directory structure would look like:
+
+```
+This Project
+├───dataset
+│   ├───train
+│   │   ├───cecum
+│   │   │    ├────── (...).jpg
+│   │   │ 
+│   │   ├───dyed-lifted-polyps
+│   │   │    ├────── (...).jpg
+│   │   │ 
+│   │   ├───dyed-resection-margins
+│   │   │    ├────── (...).jpg
+(..............)
+```
+
 
 ### 3. Split Dataset
 
@@ -64,11 +81,12 @@ learning rate or dropout rate of final dense (fully connected) layer in utils/co
 neural network via the command line. We suggest using EfficientNetB7, since it was the best model as discussed in 
 the ppt linked to at the beginning of this README.  
 
-`python train.py -e <num_epochs> -n efficientnet -c 6 -p 1`  
+`python train.py -e <num_epochs> -n efficientnet -c 8 -p 1`  
 
-Where e is for number of epochs, n is for neural network name, c is for number of classes and p is to select 
-whether custom preprocessing is enabled for training (if so, it will automatically be enabled for prediction by 
-storing this flag in the pickle file as explained). 
+Where e is for number of epochs, n is for neural network name, c is for number of classes (should be set to 
+number of classes in constants.py `CLASS_LABELS` which is equal to number of subfolders in train dataset), 
+and p is to select whether custom preprocessing is enabled for training (if so, it will automatically be 
+enabled for prediction by storing this flag in the pickle file as explained). 
 
 * Note that we do not need to specify dataset directories since these are given by default in utils/constants.
   py. `-t` and `-v` arguments are optional to change these.
@@ -112,7 +130,7 @@ training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`
   the ground truth for the video.
 * The input video is present in the repository in the path mentioned in the above command. We created this 
   video by stitching together labelled videos in the Hyper Kvasir dataset. It is a video showing performed 
-  endoscopy, in regions of the body covered by the six classes noted in the ppt. 
+  endoscopy, in regions of the body covered by the eight classes noted in the ppt. 
 * If the above video is being used, the expert annotations are: 0-60 seconds are z-line, 60-92 seconds are 
   cecum and 92 seconds till the end of the video are polyp.
 * Note that only mkv files are supported by the system at present since we hardcoded the fourcc code of the codec 

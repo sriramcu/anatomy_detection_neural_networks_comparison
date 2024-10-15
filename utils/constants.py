@@ -39,10 +39,7 @@ BATCH_SIZE = 32
 SAMPLEWISE_NORM = False
 # controls whether Keras ImageDataGenerator object instantiated will use sample wise standard normalisation
 
-CLASS_LABELS = ["cecum", "esophagitis", "polyps", "pylorus", "ulcerative-colitis", "z-line"]
-
-LR_DECAY_FACTOR = 0.1
-# factor by which learning rate decays after gains in validation accuracy slows for a certain no. of epochs
+CLASS_LABELS = ["cecum", "dyed-lifted-polyps", "dyed-resection-margins", "esophagitis", "polyps", "pylorus", "ulcerative-colitis", "z-line"]
 
 COLOR_DICT = {
     "red": (0, 0, 255),
