@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 from keras.models import load_model
 
-from custom_exponential_decay_class import CustomExponentialDecay
+from utils.custom_exponential_decay_class import CustomExponentialDecay
 from utils.constants import CHECKPOINTS_DIR, CLASS_LABELS, CONF_CSV_DIR, TRAIN_IMAGE_WIDTH, \
     TRAIN_IMAGE_HEIGHT, TEST_DIR
 from utils.generate_datagen import get_datagen_obj

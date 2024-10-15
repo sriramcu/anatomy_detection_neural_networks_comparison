@@ -12,7 +12,7 @@ import cv2
 import efficientnet.keras as efn
 from keras.saving.save import load_model
 
-from custom_exponential_decay_class import CustomExponentialDecay
+from utils.custom_exponential_decay_class import CustomExponentialDecay
 from utils.constants import CHECKPOINTS_DIR, TRAIN_IMAGE_WIDTH, TRAIN_IMAGE_HEIGHT, CLASS_LABELS
 from utils.generate_datagen import get_datagen_obj
 from utils.predict_frame import test_frame
