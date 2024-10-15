@@ -120,11 +120,18 @@ def train(
     if OPTIMIZER == "SGD":
         print(f"LR = {LEARNING_RATE}")
         optimizer = tf.keras.optimizers.SGD(learning_rate=LEARNING_RATE)
+        lr_val_loss_plateau_callback = tf.keras.callbacks.ReduceLROnPlateau(
+            monitor='val_loss',
+            factor=0.1,
+            patience=25,
+            min_lr=LEARNING_RATE * 0.01,
+        )
+        callbacks_list.append(lr_val_loss_plateau_callback)
 
     elif OPTIMIZER == 'RMSprop':
-        decay = 0.9
+        decay_rho_rmsprop = 0.9
         momentum = 0.9
-        decay_factor = 0.94
+        lr_decay_factor = 0.94
         epochs_per_decay = 2
         end_rate = LEARNING_RATE/100
         initial_learning_rate = LEARNING_RATE
@@ -151,14 +158,14 @@ def train(
 
         lr_schedule = CustomExponentialDecay(
             initial_learning_rate=initial_learning_rate,
-            decay_factor=decay_factor,
+            decay_factor=lr_decay_factor,
             decay_steps=epochs_per_decay * train_steps_per_epoch,
             end_rate=end_rate
         )
 
         optimizer = tf.keras.optimizers.RMSprop(
             learning_rate=lr_schedule,
-            rho=decay,
+            rho=decay_rho_rmsprop,
             momentum=momentum,
         )
 
