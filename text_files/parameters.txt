@@ -3,3 +3,4 @@ Epochs, Dropout, Initial LR, L2 reg, Custom preprocessing, Network, Optimizer, n
 [250, 0.2, 0.001, 0.005, False, 'efficientnet'] = harcoded lr decay to 1/10 all at once after 250/3 epochs, SGD
 [300, 0.2, 0.01, 4e-05, False, 'efficientnet', 'RMSprop'] = epsilon 1.0, decay factor = 0.94
 [302, 0.3, 0.01, 0.0004, False, 'efficientnet', 'RMSprop'] = epsilon default (1e-7); 6 classes for all till now
+[305, 0.3, 0.01, 0.0004, False, 'efficientnet', 'RMSprop'] = same as above but with 8 classes

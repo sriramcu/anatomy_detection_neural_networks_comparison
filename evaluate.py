@@ -102,7 +102,7 @@ def compute_conf_mat_scores(conf_mat):
         percentage_metrics (dict): dictionary of confusion matrix scores
     """
 
-    df_cm = pd.DataFrame(conf_mat, range(6), range(6))
+    df_cm = pd.DataFrame(conf_mat, range(len(CLASS_LABELS)), range(len(CLASS_LABELS)))
 
     print(df_cm)
 
@@ -110,7 +110,7 @@ def compute_conf_mat_scores(conf_mat):
     FP = np.sum(conf_mat, axis=0) - TP
     FN = np.sum(conf_mat, axis=1) - TP
 
-    num_classes = 6
+    num_classes = len(CLASS_LABELS)
     TN = []
     for i in range(num_classes):
         tmp_2d_arr = np.delete(conf_mat, i, 0)  # delete ith row
