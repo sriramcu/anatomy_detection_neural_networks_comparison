@@ -12,9 +12,9 @@ from collections import Counter
 import keras
 import tensorflow as tf
 
-from utils.custom_exponential_decay_class import CustomExponentialDecay
 from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, MY_DROPOUT, L2_REG, \
     TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH, OPTIMIZER
+from utils.custom_exponential_decay_class import CustomExponentialDecay
 from utils.generate_datagen import get_datagen_obj
 from utils.neural_networks import create_inception_v4, create_pretrained_inceptionv3, create_pretrained_efficientnetb7, \
     create_pretrained_nasnet
@@ -109,7 +109,7 @@ def train(
     early_stopping_callback = tf.keras.callbacks.EarlyStopping(
         monitor="val_loss",
         min_delta=0,
-        patience=50,
+        patience=35,
         verbose=1,
         mode="auto",
         baseline=None,
@@ -136,6 +136,7 @@ def train(
         epochs_per_decay = 2
         end_rate = LEARNING_RATE/100
         initial_learning_rate = LEARNING_RATE
+        epsilon = 1
 
         lr_schedule = CustomExponentialDecay(
             initial_learning_rate=initial_learning_rate,
@@ -148,6 +149,7 @@ def train(
             learning_rate=lr_schedule,
             rho=decay_rho_rmsprop,
             momentum=momentum,
+            epsilon=epsilon
         )
 
         class PrintDecayedLrCallback(tf.keras.callbacks.Callback):

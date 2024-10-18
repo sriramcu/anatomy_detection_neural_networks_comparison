@@ -4,3 +4,10 @@ Epochs, Dropout, Initial LR, L2 reg, Custom preprocessing, Network, Optimizer, n
 [300, 0.2, 0.01, 4e-05, False, 'efficientnet', 'RMSprop'] = epsilon 1.0, decay factor = 0.94
 [302, 0.3, 0.01, 0.0004, False, 'efficientnet', 'RMSprop'] = epsilon default (1e-7); 6 classes for all till now
 [305, 0.3, 0.01, 0.0004, False, 'efficientnet', 'RMSprop'] = same as above but with 8 classes
+[306, 0.3, 0.01, 4e-05, False, 'efficientnet', 'RMSprop']
+[307, 0, 0.01, 4e-05, False, 'efficientnet', 'RMSprop']
+[280, 0, 0.01, 4e-05, False, 'efficientnet', 'RMSprop'] = removed shear, zoom, rotation, height/width shift
+[281, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop']
+[282, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = epsilon 1.0, changed interpolation from cubic to bilinear
+[283, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = all layers trainable, batch size 2
+[70, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = no layers trainable, batch size 2
