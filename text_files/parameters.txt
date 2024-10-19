@@ -12,3 +12,4 @@ Epochs, Dropout, Initial LR, L2 reg, Custom preprocessing, Network, Optimizer, n
 [283, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = all layers trainable, batch size 2
 [70, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = no layers trainable, batch size 2
 [90, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop']
+[91, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop'] = more augmentations like brightness, zoom, etc

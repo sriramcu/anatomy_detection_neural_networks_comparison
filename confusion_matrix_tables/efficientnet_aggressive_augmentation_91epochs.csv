@@ -1,0 +1,14 @@
+Class,cecum,dyed-lifted-polyps,dyed-resection-margins,esophagitis,polyps,pylorus,ulcerative-colitis,z-line
+cecum,150,0,0,0,0,0,1,0
+dyed-lifted-polyps,0,143,6,0,0,0,1,0
+dyed-resection-margins,0,11,137,0,0,0,0,0
+esophagitis,0,0,0,80,0,0,0,19
+polyps,1,2,0,0,146,1,4,0
+pylorus,0,0,0,0,0,149,0,0
+ulcerative-colitis,4,0,0,0,0,1,122,0
+z-line,0,0,0,17,0,1,0,121
+Precision = 93.31
+Accuracy = 98.46
+Recall (Sensitivity) = 93.25
+Specificity = 99.12
+F1 score = 93.26
