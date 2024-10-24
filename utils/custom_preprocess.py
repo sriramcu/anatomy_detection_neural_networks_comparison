@@ -103,10 +103,15 @@ def magva(image: np.ndarray):
     lower_bound = desired_mean - margin
     upper_bound = desired_mean + margin
 
+    max_attempts = 0
+
     while img_mean < lower_bound or img_mean > upper_bound:
         gamma = math.log(desired_mean / 255) / math.log(img_mean / 255)
         image = skimage.exposure.adjust_gamma(image, gamma)
         img_mean = np.mean(image)
+        max_attempts += 1
+        if max_attempts > 1000:
+            break  # to prevent infinite loop of gamma adjustment
 
     return image
 

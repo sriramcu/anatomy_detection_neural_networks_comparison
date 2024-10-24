@@ -26,11 +26,12 @@ def get_datagen_obj(custom_preprocessing=True, mode="training"):
     if mode == "training":
         datagen = ImageDataGenerator(
             rescale=1 / 255,
-            # rotation_range=40,
-            # width_shift_range=0.1,
-            # height_shift_range=0.1,
-            # shear_range=0.1,
-            # zoom_range=0.1,
+            rotation_range=40,
+            width_shift_range=0.1,
+            height_shift_range=0.1,
+            shear_range=0.1,
+            zoom_range=0.1,
+            brightness_range=(0.5,2.0),
             horizontal_flip=True,
             vertical_flip=True,
             fill_mode='nearest',

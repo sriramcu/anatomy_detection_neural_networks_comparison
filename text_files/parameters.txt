@@ -1,4 +1,4 @@
-Epochs, Dropout, Initial LR, L2 reg, Custom preprocessing, Network, Optimizer, num classes
+Epochs, Dropout, Initial LR, L2 reg, Custom preprocessing, Network, Optimizer, num classes, batch size
 
 [250, 0.2, 0.001, 0.005, False, 'efficientnet'] = harcoded lr decay to 1/10 all at once after 250/3 epochs, SGD
 [300, 0.2, 0.01, 4e-05, False, 'efficientnet', 'RMSprop'] = epsilon 1.0, decay factor = 0.94
@@ -11,5 +11,19 @@ Epochs, Dropout, Initial LR, L2 reg, Custom preprocessing, Network, Optimizer, n
 [282, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = epsilon 1.0, changed interpolation from cubic to bilinear
 [283, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = all layers trainable, batch size 2
 [70, 0, 0.01, 4e-05, True, 'efficientnet', 'RMSprop'] = no layers trainable, batch size 2
-[90, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop']
+[90, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop'] = all layers, higher L2, CPP off
 [91, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop'] = more augmentations like brightness, zoom, etc
+[60, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop'] = 100 layers
+[61, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop'] = 20 layers
+[150, 0, 0.01, 0.004, False, 'efficientnet', 'RMSprop']
+[151, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop']
+[152, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop']
+[153, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop']
+[154, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop']
+[155, 0.3, 0.01, 0.05, False, 'efficientnet', 'RMSprop']
+[156, 0.3, 0.01, 0.05, False, 'efficientnet', 'RMSprop']
+[157, 0.1, 0.01, 0.05, False, 'efficientnet', 'RMSprop']
+[158, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop', 100]
+[159, 0.2, 0.01, 0.02, False, 'efficientnet', 'RMSprop', 100]
+[160, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop', 100] BS 16
+[161, 0.2, 0.01, 0.01, True, 'efficientnet', 'RMSprop', 100, 16]

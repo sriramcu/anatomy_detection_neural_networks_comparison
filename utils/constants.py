@@ -27,14 +27,14 @@ TRAIN_IMAGE_HEIGHT = 299
 # input layer dimensions of neural network. Even if above values do not match neural network actually used 
 # at the time of execution, program has a provision to prompt the user for actual dims in case of mismatch
 
-NUM_TRAINABLE_LAYERS = 5000
-L2_REG = 0.004
-MY_DROPOUT = 0
+NUM_TRAINABLE_LAYERS = 150
+L2_REG = 0.01
+MY_DROPOUT = 0.2
 LEARNING_RATE = 0.01
 OPTIMIZER = "RMSprop"
 # for pretrained networks, number of layers whose parameters/weights can be modified during training process
 
-BATCH_SIZE = 2
+BATCH_SIZE = 16
 
 SAMPLEWISE_NORM = False
 # controls whether Keras ImageDataGenerator object instantiated will use sample wise standard normalisation

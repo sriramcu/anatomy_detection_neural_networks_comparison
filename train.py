@@ -13,7 +13,7 @@ import keras
 import tensorflow as tf
 
 from utils.constants import BATCH_SIZE, TRAIN_IMAGE_HEIGHT, TRAIN_IMAGE_WIDTH, LEARNING_RATE, MY_DROPOUT, L2_REG, \
-    TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH, OPTIMIZER
+    TRAIN_DIR, CHECKPOINTS_DIR, TRAIN_PICKLE_DIR, VAL_DIR, PARAMETERS_FILEPATH, OPTIMIZER, NUM_TRAINABLE_LAYERS
 from utils.custom_exponential_decay_class import CustomExponentialDecay
 from utils.generate_datagen import get_datagen_obj
 from utils.neural_networks import create_inception_v4, create_pretrained_inceptionv3, create_pretrained_efficientnetb7, \
@@ -181,7 +181,7 @@ def train(
     # Save stuff into txt and pickle files as explained in the docstring
     f = open(PARAMETERS_FILEPATH, 'a')
     params = [num_epochs, MY_DROPOUT, LEARNING_RATE, L2_REG, custom_preprocessing, network_name]
-    f.write(f"{params + [OPTIMIZER]}\n")
+    f.write(f"{params + [OPTIMIZER] + [NUM_TRAINABLE_LAYERS] + [BATCH_SIZE]}\n")
     f.close()
 
     f = open(metrics_pickle_filepath, "wb")
