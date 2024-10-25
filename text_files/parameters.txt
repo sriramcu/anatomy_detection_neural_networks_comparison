@@ -28,3 +28,4 @@ Epochs, Dropout, Initial LR, L2 reg, Custom preprocessing, Network, Optimizer, n
 [160, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop', 100] BS 16
 [161, 0.2, 0.01, 0.01, True, 'efficientnet', 'RMSprop', 100, 16]
 [162, 0.2, 0.01, 0.01, True, 'efficientnet', 'RMSprop', 150, 16]
+[163, 0.2, 0.01, 0.01, False, 'efficientnet', 'RMSprop', 150, 16]
