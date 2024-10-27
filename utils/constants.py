@@ -27,7 +27,7 @@ TRAIN_IMAGE_HEIGHT = 299
 # input layer dimensions of neural network. Even if above values do not match neural network actually used 
 # at the time of execution, program has a provision to prompt the user for actual dims in case of mismatch
 
-NUM_TRAINABLE_LAYERS = 150
+NUM_TRAINABLE_LAYERS = 50
 L2_REG = 0.01
 MY_DROPOUT = 0.2
 LEARNING_RATE = 0.01
