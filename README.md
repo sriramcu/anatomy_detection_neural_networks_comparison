@@ -6,12 +6,6 @@ The custom preprocessing (as explained in this README) is loosely based off of t
 described in [this research paper](./materials/cogan2019.pdf), which also was a starting point for this project 
 for us to improve upon by tweaking the hyperparameters and neural networks to find an optimal model.
 
-The methodology and results of this work is described 
-[in this powerpoint presentation](./materials/AnatomyDetection_Inceptionv4_cogan.pptx).
-
-The ppt shows the effect of using different neural networks, optimizers, augmentation techniques as well as the 
-usage of the custom preprocessing technique. The ppt also describes cases where dyed lifted polyps and dyed 
-resection margins are not included in the classifier.
 
 ## Dataset
 
@@ -79,8 +73,7 @@ To reverse the above split, use `python merge_datasets.py`
 
 We can modify image augmentation techniques in utils/my_datagen.py. Or we could change L2 parameter, initial 
 learning rate or dropout rate of final dense (fully connected) layer in utils/constants.py. Then, choose your 
-neural network via the command line. We suggest using EfficientNetB7, since it was the best model as discussed in 
-the ppt linked to at the beginning of this README.  
+neural network via the command line. We suggest using EfficientNetB7.
 
 `python train.py -e <num_epochs> -n efficientnet -c 8 -p 1`  
 
@@ -131,7 +124,7 @@ training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`
   the ground truth for the video.
 * The input video is present in the repository in the path mentioned in the above command. We created this 
   video by stitching together labelled videos in the Hyper Kvasir dataset. It is a video showing performed 
-  endoscopy, in regions of the body covered by the eight classes noted in the ppt. 
+  endoscopy, in regions of the body covered by the eight classes.
 * If the above video is being used, the expert annotations are: 0-60 seconds are z-line, 60-92 seconds are 
   cecum and 92 seconds till the end of the video are polyp.
 * Note that only mkv files are supported by the system at present since we hardcoded the fourcc code of the codec 
@@ -143,13 +136,15 @@ used in the OpenCV video writer functions.
 ## Note
 
 Due to large file restrictions, the checkpoints have not been uploaded to the repository, and they remain in our 
-local system. Please reach out to me if you'd like to use a specific model checkpoints (h5) file for 
+local system. Some checkpoint files have been uploaded to 
+[this drive folder](https://drive.google.com/drive/folders/1obA05irsQN6eW3pqgrjSUXsSZNkav6yD?usp=sharing). 
+Please reach out to me if you'd like to use a specific model checkpoints (h5) file for 
 predictions, will be happy to share it. You can also contact me for any other kind of clarification.
 
 ## Analysis
 
 The analysis of results obtained using different configurations such as neural network used, choice of 
-augmentations and custom preprocessing can be found in `analysis/analysis.xlsx`. This excel sheet shows the 
+augmentations and custom preprocessing can be found in `analysis/analysis.xlsx`. This Excel sheet shows the 
 training and validation loss graphs obtained as well as confusion matrix metrics in each case. In multiple such 
 configurations, we were able to surpass the accuracy obtained by the Cogan [^1] paper. 
 
