@@ -142,9 +142,16 @@ used in the OpenCV video writer functions.
 
 ## Note
 
-Due to large file restrictions, the checkpoints have not been uploaded to the repository and they remain in our 
+Due to large file restrictions, the checkpoints have not been uploaded to the repository, and they remain in our 
 local system. Please reach out to me if you'd like to use a specific model checkpoints (h5) file for 
 predictions, will be happy to share it. You can also contact me for any other kind of clarification.
+
+## Analysis
+
+The analysis of results obtained using different configurations such as neural network used, choice of 
+augmentations and custom preprocessing can be found in `analysis/analysis.xlsx`. This excel sheet shows the 
+training and validation loss graphs obtained as well as confusion matrix metrics in each case. In multiple such 
+configurations, we were able to surpass the accuracy obtained by the Cogan [^1] paper. 
 
 ## Contributions
 
