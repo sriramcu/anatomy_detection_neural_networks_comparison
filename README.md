@@ -1,5 +1,7 @@
 # Anatomy Detection in Endoscopy using Deep Learning Techniques 
 
+
+
 A project used for a comparative study of deep learning algorithms used for anatomy detection in endoscopy. 
 Compares the performance of various neural networks and hyperparameters on an eight class classification problem. 
 The custom preprocessing (as explained in this README) is loosely based off of the MAPGI [^1] algorithm 
@@ -137,6 +139,11 @@ used in the OpenCV video writer functions.
 * The output video is annotated in the top left corner in yellow color with expert-entered labels (via the 
   command line in the form of user input prompted by the program) as well as in the top right corner in green 
   color with the AI-based prediction returned by the model in the form of the predicted class label and the prediction probability. 
+
+![Demo Screenshot.png](videos%2Foutput_videos%2FDemo%20Screenshot.png)
+
+Entire output video can be seen at the start of this README.
+
 
 ## Note
 
