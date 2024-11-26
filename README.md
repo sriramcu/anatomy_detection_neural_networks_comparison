@@ -2,6 +2,10 @@
 
 
 
+https://github.com/user-attachments/assets/7376135d-da8d-448d-b264-5577ffe8362a
+
+
+
 A project used for a comparative study of deep learning algorithms used for anatomy detection in endoscopy. 
 Compares the performance of various neural networks and hyperparameters on an eight class classification problem. 
 The custom preprocessing (as explained in this README) is loosely based off of the MAPGI [^1] algorithm 
