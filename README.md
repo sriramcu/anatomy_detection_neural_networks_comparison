@@ -99,7 +99,12 @@ enabled for prediction by storing this flag in the pickle file as explained).
 
 `python analyse_train_data.py -p training_metrics_pickle_files/train_metrics_<num_epochs>_<network>.pickle`  
 
-`-k` and `-i` are optional arguments for kth highest accuracy and interval-wise average accuracy respectively.
+`-k` and `-i` are optional arguments for kth highest accuracy and interval-wise average accuracy respectively.  
+
+This will generate graphs for epoch-wise training/validation loss and accuracy:
+
+![accuracy_graph.jpg](graphs%2Ftrain_metrics_307epochs_efficientnet_eight_class%2Faccuracy_graph.jpg)
+
 
 ### 6. Evaluation
 
