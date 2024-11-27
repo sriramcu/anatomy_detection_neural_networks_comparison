@@ -51,6 +51,7 @@ Thumbs.db
 *.pyc
 *.h5
 *.jpg
+debugger*.txt
 !input.mkv
 !graphs/*/*.jpg
 ~$*
